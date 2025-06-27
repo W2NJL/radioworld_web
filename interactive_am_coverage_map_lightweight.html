@@ -1,0 +1,420 @@
+
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Interactive AM Radio Coverage Analysis (Lightweight)</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+        <style>
+            #map { height: 100vh; }
+            
+            .control-panel {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                background: white;
+                padding: 15px;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                z-index: 1000;
+                max-width: 300px;
+            }
+            
+            .search-panel {
+                position: fixed;
+                top: 10px;
+                left: 10px;
+                background: white;
+                padding: 15px;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                z-index: 1000;
+                max-width: 250px;
+            }
+            
+            .legend {
+                position: fixed;
+                bottom: 50px;
+                right: 50px;
+                background: white;
+                padding: 15px;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+                z-index: 1000;
+                max-width: 300px;
+                max-height: 500px;
+                overflow-y: auto;
+                font-size: 12px;
+            }
+            
+            .toggle-switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+                margin: 5px;
+            }
+            
+            .toggle-switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                transition: .4s;
+                border-radius: 34px;
+            }
+            
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: .4s;
+                border-radius: 50%;
+            }
+            
+            input:checked + .slider {
+                background-color: #2196F3;
+            }
+            
+            input:checked + .slider:before {
+                transform: translateX(26px);
+            }
+            
+            .search-box {
+                width: 100%;
+                padding: 8px;
+                margin: 5px 0;
+                border: 1px solid #ddd;
+                border-radius: 3px;
+            }
+            
+            .loading {
+                color: #666;
+                font-style: italic;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        
+        <div class="control-panel">
+            <h4>View Control</h4>
+            <div>
+                <label>
+                    <span>Daytime 0.5 m/V (All Stations)</span>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="dayToggle" checked>
+                        <span class="slider"></span>
+                    </div>
+                </label>
+            </div>
+            <div>
+                <label>
+                    <span>Nighttime 2.0 m/V (50kW+)</span>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="nightToggle">
+                        <span class="slider"></span>
+                    </div>
+                </label>
+            </div>
+            <div style="margin-top: 10px;">
+                <button onclick="clearSearchResults()" style="width: 100%; padding: 5px;">Clear Search Results</button>
+            </div>
+        </div>
+        
+        <div class="search-panel">
+            <h4>Station Search</h4>
+            <input type="text" id="callsignSearch" class="search-box" placeholder="Enter callsign (e.g., WJR, KFI)" />
+            <div>
+                <label>
+                    <input type="radio" name="contourType" value="day_0_5" checked> Day 0.5 m/V
+                </label><br>
+                <label>
+                    <input type="radio" name="contourType" value="day_2"> Day 2.0 m/V
+                </label><br>
+                <label>
+                    <input type="radio" name="contourType" value="night_2"> Night 2.0 m/V
+                </label>
+            </div>
+            <button onclick="searchStation()" style="width: 100%; padding: 8px; margin-top: 5px;">Show Contour</button>
+            <div id="searchResults" style="margin-top: 10px;"></div>
+        </div>
+        
+        <div class="legend">
+            <h4>AM Coverage Leaders by Region</h4>
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <i class="fa fa-broadcast-tower" style="color:red; margin-right: 5px;"></i>
+                <span>Daytime Leaders</span>
+            </div>
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <i class="fa fa-broadcast-tower" style="color:darkred; margin-right: 5px;"></i>
+                <span>Nighttime High-Power (50kW+)</span>
+            </div>
+            <hr>
+            <div style="max-height: 300px; overflow-y: auto;">
+                <div><span style="color:#1f77b4">━━━</span> Great Lakes</div>
+                <div><span style="color:#ff7f0e">━━━</span> Northeast</div>
+                <div><span style="color:#2ca02c">━━━</span> Mid-Atlantic</div>
+                <div><span style="color:#d62728">━━━</span> Southeast</div>
+                <div><span style="color:#9467bd">━━━</span> Gulf Coast</div>
+                <div><span style="color:#8c564b">━━━</span> Mid-South</div>
+                <div><span style="color:#e377c2">━━━</span> Plains</div>
+                <div><span style="color:#7f7f7f">━━━</span> Upper Midwest</div>
+                <div><span style="color:#bcbd22">━━━</span> Rockies</div>
+                <div><span style="color:#17becf">━━━</span> Southwest</div>
+                <div><span style="color:#aec7e8">━━━</span> Pacific Northwest</div>
+                <div><span style="color:#ffbb78">━━━</span> California</div>
+                <div><span style="color:#98df8a">━━━</span> Alaska</div>
+                <div><span style="color:#ff9896">━━━</span> Hawaii</div>
+            </div>
+            <hr>
+            <div style="font-size: 10px; color: #666;">
+                <p><strong>Lightweight Version</strong></p>
+                <p>Loads contours on-demand from external files for faster initial loading.</p>
+            </div>
+        </div>
+        
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script>
+            // Initialize map
+            var map = L.map('map').setView([37.9952014611473, -92.12766474212559], 4);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
+            
+            // Region colors
+            var regionColors = {"Great Lakes": "#1f77b4", "Northeast": "#ff7f0e", "Mid-Atlantic": "#2ca02c", "Southeast": "#d62728", "Gulf Coast": "#9467bd", "Mid-South": "#8c564b", "Plains": "#e377c2", "Upper Midwest": "#7f7f7f", "Rockies": "#bcbd22", "Southwest": "#17becf", "Pacific Northwest": "#aec7e8", "California": "#ffbb78", "Alaska": "#98df8a", "Hawaii": "#ff9896", "Unknown": "#c5b0d5"};
+            
+            // Layer groups
+            var dayGroup = L.layerGroup().addTo(map);
+            var nightGroup = L.layerGroup();
+            var searchGroup = L.layerGroup().addTo(map);
+            
+            // Data cache
+            var contourIndex = null;
+            var dayCoords = null;
+            var nightCoords = null;
+            
+            // Load data functions
+            async function loadContourIndex() {
+                if (!contourIndex) {
+                    const response = await fetch('contour_index.csv');
+                    const text = await response.text();
+                    contourIndex = parseCSV(text);
+                }
+                return contourIndex;
+            }
+            
+            async function loadCoordinates(type) {
+                const filename = `coordinates_${type.replace('.', '_')}.csv`;
+                const response = await fetch(filename);
+                const text = await response.text();
+                return parseCSV(text);
+            }
+            
+            function parseCSV(text) {
+                const lines = text.split('\n');
+                const headers = lines[0].split(',');
+                const data = [];
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim()) {
+                        const values = lines[i].split(',');
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header] = values[index];
+                        });
+                        data.push(row);
+                    }
+                }
+                return data;
+            }
+            
+            // Initialize with day leaders
+            async function initializeMap() {
+                const index = await loadContourIndex();
+                
+                // Load day leaders
+                const dayLeaders = index.filter(row => 
+                    row.contour_type === 'day_0.5' && 
+                    row.region !== 'Unknown' &&
+                    row.lat && row.lon
+                );
+                
+                // Group by region and get top 10
+                const regionGroups = {};
+                dayLeaders.forEach(station => {
+                    if (!regionGroups[station.region]) regionGroups[station.region] = [];
+                    regionGroups[station.region].push(station);
+                });
+                
+                Object.keys(regionGroups).forEach(region => {
+                    regionGroups[region].sort((a, b) => parseFloat(b.area) - parseFloat(a.area));
+                    regionGroups[region] = regionGroups[region].slice(0, 10);
+                });
+                
+                // Add markers for top stations
+                Object.values(regionGroups).flat().forEach(station => {
+                    if (station.lat && station.lon) {
+                        const color = regionColors[station.region] || '#c5b0d5';
+                        const marker = L.marker([parseFloat(station.lat), parseFloat(station.lon)], {
+                            icon: L.divIcon({
+                                html: `<i class="fa fa-broadcast-tower" style="color:red; font-size:16px;"></i>`,
+                                className: 'custom-marker',
+                                iconSize: [20, 20]
+                            })
+                        }).bindPopup(
+                            `<b>${station.callsign}</b><br>` +
+                            `<b>Frequency:</b> ${station.frequency} kHz<br>` +
+                            `<b>Location:</b> ${station.city}, ${station.state}<br>` +
+                            `<b>Power:</b> ${station.power} kW<br>` +
+                            `<b>Coverage:</b> ${parseFloat(station.area).toFixed(4)} sq deg`
+                        ).bindTooltip(`${station.callsign} - ${station.frequency} kHz - ${station.region}`);
+                        
+                        dayGroup.addLayer(marker);
+                    }
+                });
+            }
+            
+            // Search function
+            async function searchStation() {
+                const callsign = document.getElementById('callsignSearch').value.toUpperCase().trim();
+                const contourType = document.querySelector('input[name="contourType"]:checked').value;
+                
+                if (!callsign) {
+                    alert('Please enter a callsign');
+                    return;
+                }
+                
+                document.getElementById('searchResults').innerHTML = '<div class="loading">Loading...</div>';
+                
+                try {
+                    const index = await loadContourIndex();
+                    const station = index.find(row => 
+                        row.callsign === callsign && 
+                        row.contour_type === contourType.replace('_', '.')
+                    );
+                    
+                    if (!station) {
+                        document.getElementById('searchResults').innerHTML = 
+                            `<div>Station "${callsign}" not found with ${contourType} contour</div>`;
+                        return;
+                    }
+                    
+                    // Load coordinates for this type
+                    const coordsData = await loadCoordinates(contourType.replace('_', '.'));
+                    const stationCoords = coordsData.find(row => row.callsign === callsign);
+                    
+                    if (!stationCoords) {
+                        document.getElementById('searchResults').innerHTML = 
+                            `<div>Coordinates not found for ${callsign}</div>`;
+                        return;
+                    }
+                    
+                    // Clear previous search results
+                    searchGroup.clearLayers();
+                    
+                    // Parse and add contour
+                    const coordinates = JSON.parse(stationCoords.coordinates);
+                    const polyline = L.polyline(coordinates, {
+                        color: '#FFD700',
+                        weight: 4,
+                        opacity: 1.0
+                    }).bindPopup(
+                        `<b>${callsign} - SEARCH RESULT</b><br>` +
+                        `Contour: ${contourType}<br>` +
+                        `Coverage: ${parseFloat(station.area).toFixed(4)} sq deg`
+                    );
+                    searchGroup.addLayer(polyline);
+                    
+                    // Add marker if location exists
+                    if (station.lat && station.lon) {
+                        const marker = L.marker([parseFloat(station.lat), parseFloat(station.lon)], {
+                            icon: L.divIcon({
+                                html: '<i class="fa fa-star" style="color:#FFD700; font-size:20px;"></i>',
+                                className: 'custom-marker',
+                                iconSize: [24, 24]
+                            })
+                        }).bindPopup(
+                            `<b>${callsign} - SEARCH RESULT</b><br>` +
+                            `<b>Frequency:</b> ${station.frequency} kHz<br>` +
+                            `<b>Location:</b> ${station.city}, ${station.state}<br>` +
+                            `<b>Power:</b> ${station.power} kW<br>` +
+                            `<b>Coverage:</b> ${parseFloat(station.area).toFixed(4)} sq deg`
+                        );
+                        searchGroup.addLayer(marker);
+                        
+                        // Pan to station
+                        map.setView([parseFloat(station.lat), parseFloat(station.lon)], 8);
+                    } else {
+                        // Pan to contour center
+                        const bounds = L.latLngBounds(coordinates);
+                        map.fitBounds(bounds);
+                    }
+                    
+                    // Show results
+                    document.getElementById('searchResults').innerHTML = 
+                        `<div><strong>${callsign}</strong> - ${contourType}<br>` +
+                        `Coverage: ${parseFloat(station.area).toFixed(4)} sq deg</div>`;
+                        
+                } catch (error) {
+                    document.getElementById('searchResults').innerHTML = 
+                        `<div>Error loading data: ${error.message}</div>`;
+                }
+            }
+            
+            function clearSearchResults() {
+                searchGroup.clearLayers();
+                document.getElementById('searchResults').innerHTML = '';
+                document.getElementById('callsignSearch').value = '';
+            }
+            
+            // Toggle functions (simplified for now)
+            function toggleDay() {
+                const dayToggle = document.getElementById('dayToggle');
+                if (dayToggle.checked) {
+                    map.addLayer(dayGroup);
+                } else {
+                    map.removeLayer(dayGroup);
+                }
+            }
+            
+            function toggleNight() {
+                // Placeholder for night toggle
+                const nightToggle = document.getElementById('nightToggle');
+                if (nightToggle.checked) {
+                    map.addLayer(nightGroup);
+                } else {
+                    map.removeLayer(nightGroup);
+                }
+            }
+            
+            // Event listeners
+            document.getElementById('dayToggle').addEventListener('change', toggleDay);
+            document.getElementById('nightToggle').addEventListener('change', toggleNight);
+            document.getElementById('callsignSearch').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchStation();
+                }
+            });
+            
+            // Initialize
+            initializeMap();
+        </script>
+    </body>
+    </html>
+    
