@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Interactive AM Radio Coverage Analysis (Enhanced with Region Toggles)</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+        
+        #map { height: 100vh; }
+        
+        .panel {
+            position: fixed;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 20px;
+        }
+        
+        .control-panel {
+            top: 20px;
+            right: 20px;
+            max-width: 280px;
+        }
+        
+        .search-panel {
+            top: 20px;
+            left: 20px;
+            max-width: 260px;
+        }
+        
+        .legend-panel {
+            bottom: 80px;
+            right: 20px;
+            max-width: 320px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        h4 {
+            margin: 0 0 15px 0;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        .toggle-container {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+            transition: .3s;
+            border-radius: 24px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        input:checked + .slider {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 2px solid #e1e1e1;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            background: rgba(255, 255, 255, 0.9);
+        }
+        
+        .search-box:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+        
+        .btn.secondary {
+            background: linear-gradient(45deg, #6c757d, #5a6268);
+        }
+        
+        .btn.secondary:hover {
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+        
+        .region-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .region-toggle:last-child {
+            border-bottom: none;
+        }
+        
+        .region-color {
+            display: inline-block;
+            width: 20px;
+            height: 3px;
+            margin-right: 10px;
+            border-radius: 2px;
+        }
+        
+        .region-label {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #333;
+            flex-grow: 1;
+        }
+        
+        .region-toggle-switch {
+            width: 40px;
+            height: 20px;
+        }
+        
+        .region-toggle-switch .slider {
+            border-radius: 20px;
+        }
+        
+        .region-toggle-switch .slider:before {
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+        }
+        
+        .region-toggle-switch input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+        
+        .loading {
+            color: #666;
+            font-style: italic;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .search-results {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(76, 175, 80, 0.1);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        
+        .footer-note {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            font-size: 11px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        .view-mode-label {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .radio-group {
+            margin: 10px 0;
+        }
+        
+        .radio-group label {
+            display: block;
+            padding: 4px 0;
+            font-size: 13px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    
+    <div class="panel control-panel">
+        <h4>Coverage View</h4>
+        <div class="toggle-container">
+            <span class="view-mode-label">Daytime</span>
+            <div class="toggle-switch">
+                <input type="checkbox" id="dayToggle" checked>
+                <span class="slider"></span>
+            </div>
+        </div>
+        <div class="toggle-container">
+            <span class="view-mode-label">Nighttime 2.0 m/V (50kW+)</span>
+            <div class="toggle-switch">
+                <input type="checkbox" id="nightToggle">
+                <span class="slider"></span>
+            </div>
+        </div>
+        <button class="btn secondary" onclick="clearSearchResults()">Clear Search Results</button>
+    </div>
+    
+    <div class="panel search-panel">
+        <h4>Station Search</h4>
+        <input type="text" id="callsignSearch" class="search-box" placeholder="Enter callsign (e.g., WJR, KFI)" />
+        <div class="radio-group">
+            <label>
+                <input type="radio" name="contourType" value="day_0_5" checked> Day 0.5 m/V
+            </label>
+            <label>
+                <input type="radio" name="contourType" value="day_2"> Day 2.0 m/V
+            </label>
+        </div>
+        <button class="btn" onclick="searchStation()">Show Contour</button>
+        <div id="searchResults"></div>
+    </div>
+    
+    <div class="panel legend-panel">
+        <h4>Regional Coverage Leaders</h4>
+        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+            <i class="fa fa-broadcast-tower" style="color:red; margin-right: 8px;"></i>
+            <span style="font-size: 13px;">Daytime Leaders</span>
+        </div>
+        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+            <i class="fa fa-broadcast-tower" style="color:darkred; margin-right: 8px;"></i>
+            <span style="font-size: 13px;">Nighttime High-Power (50kW+)</span>
+        </div>
+        
+        <hr style="border: none; height: 1px; background: rgba(0,0,0,0.1); margin: 15px 0;">
+        
+        <div style="margin-bottom: 15px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                <span style="font-weight: 500; font-size: 14px;">Region Filters</span>
+                <div style="font-size: 12px;">
+                    <button onclick="toggleAllRegions(true)" style="background: none; border: none; color: #4CAF50; cursor: pointer; margin-right: 5px;">All</button>
+                    <button onclick="toggleAllRegions(false)" style="background: none; border: none; color: #999; cursor: pointer;">None</button>
+                </div>
+            </div>
+            
+            <div id="regionToggles">
+                <!-- Region toggles will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <div class="footer-note">
+            <strong>Interactive Features:</strong><br>
+            • Toggle day/night views<br>
+            • Show/hide regions individually<br>
+            • Search any station by callsign<br>
+            • Click markers/contours for details<br><br>
+            <strong>Nick Langan (Radio World)</strong><br>
+            Exploring the FCC contour data of U.S. AM radio stations
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize map
+        var map = L.map('map').setView([37.9952014611473, -92.12766474212559], 4);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+        
+        // Region colors and definitions
+        var regionColors = {
+            "Great Lakes": "#1f77b4",
+            "Northeast": "#ff7f0e", 
+            "Mid-Atlantic": "#2ca02c",
+            "Southeast": "#d62728",
+            "Gulf Coast": "#9467bd",
+            "Mid-South": "#8c564b",
+            "Plains": "#e377c2",
+            "Upper Midwest": "#7f7f7f",
+            "Rockies": "#bcbd22",
+            "Southwest": "#17becf",
+            "Pacific Northwest": "#aec7e8",
+            "California": "#ffbb78",
+            "Alaska": "#98df8a",
+            "Hawaii": "#ff9896",
+            "Unknown": "#c5b0d5"
+        };
+        
+        var regions = Object.keys(regionColors).filter(r => r !== "Unknown");
+        
+        // Layer groups for each region
+        var dayRegionGroups = {};
+        var nightRegionGroups = {};
+        var searchGroup = L.layerGroup().addTo(map);
+        
+        // Initialize region groups
+        regions.forEach(region => {
+            dayRegionGroups[region] = L.layerGroup().addTo(map);
+            nightRegionGroups[region] = L.layerGroup();
+        });
+        
+        // Data cache
+        var contourIndex = null;
+        var dayCoords = null;
+        var nightCoords = null;
+        
+        // Create region toggle controls
+        function createRegionToggles() {
+            const container = document.getElementById('regionToggles');
+            container.innerHTML = '';
+            
+            regions.forEach(region => {
+                const div = document.createElement('div');
+                div.className = 'region-toggle';
+                div.innerHTML = `
+                    <div class="region-label">
+                        <span class="region-color" style="background-color: ${regionColors[region]}"></span>
+                        <span>${region}</span>
+                    </div>
+                    <div class="toggle-switch region-toggle-switch">
+                        <input type="checkbox" id="region_${region.replace(/\s+/g, '_')}" checked>
+                        <span class="slider"></span>
+                    </div>
+                `;
+                container.appendChild(div);
+                
+                // Add event listener
+                const checkbox = div.querySelector('input');
+                checkbox.addEventListener('change', function() {
+                    toggleRegion(region, this.checked);
+                });
+            });
+        }
+        
+        // Toggle specific region
+        function toggleRegion(region, show) {
+            const dayToggle = document.getElementById('dayToggle');
+            const nightToggle = document.getElementById('nightToggle');
+            
+            if (show) {
+                if (dayToggle.checked && dayRegionGroups[region]) {
+                    map.addLayer(dayRegionGroups[region]);
+                }
+                if (nightToggle.checked && nightRegionGroups[region]) {
+                    map.addLayer(nightRegionGroups[region]);
+                }
+            } else {
+                if (dayRegionGroups[region]) {
+                    map.removeLayer(dayRegionGroups[region]);
+                }
+                if (nightRegionGroups[region]) {
+                    map.removeLayer(nightRegionGroups[region]);
+                }
+            }
+        }
+        
+        // Toggle all regions
+        function toggleAllRegions(show) {
+            regions.forEach(region => {
+                const checkbox = document.getElementById(`region_${region.replace(/\s+/g, '_')}`);
+                if (checkbox) {
+                    checkbox.checked = show;
+                    toggleRegion(region, show);
+                }
+            });
+        }
+        
+        // Load data functions
+        async function loadContourIndex() {
+            if (!contourIndex) {
+                const response = await fetch('contour_index.csv');
+                const text = await response.text();
+                contourIndex = parseCSV(text);
+            }
+            return contourIndex;
+        }
+        
+        async function loadCoordinates(type) {
+            const filename = `coordinates_${type.replace('.', '_')}.csv`;
+            const response = await fetch(filename);
+            const text = await response.text();
+            return parseCSV(text);
+        }
+        
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            const result = [];
+            let headers = null;
+            let currentRecord = '';
+            let inQuotes = false;
+            
+            for (let line of lines) {
+                currentRecord += line;
+                
+                // Count quotes to determine if we're inside a quoted field
+                let quoteCount = (currentRecord.match(/"/g) || []).length;
+                inQuotes = quoteCount % 2 === 1;
+                
+                if (!inQuotes) {
+                    // Complete record found
+                    if (!headers) {
+                        headers = parseCSVLine(currentRecord);
+                    } else if (currentRecord.trim()) {
+                        const values = parseCSVLine(currentRecord);
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header] = values[index] || '';
+                        });
+                        result.push(row);
+                    }
+                    currentRecord = '';
+                } else {
+                    // Continue reading next line
+                    currentRecord += '\n';
+                }
+            }
+            
+            return result;
+        }
+        
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        current += '"';
+                        i++; // Skip next quote
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current.trim());
+            return result;
+        }
+        
+        // Add contours to specific region group
+        async function addContoursToGroup(stations, groupMap, contourType, markerColor) {
+            const coordsData = await loadCoordinates(contourType);
+            
+            stations.forEach(station => {
+                const region = station.region;
+                if (!region || region === 'Unknown' || !groupMap[region]) return;
+                
+                const group = groupMap[region];
+                
+                // Add marker
+                if (station.lat && station.lon) {
+                    const marker = L.marker([parseFloat(station.lat), parseFloat(station.lon)], {
+                        icon: L.divIcon({
+                            html: `<i class="fa fa-broadcast-tower" style="color:${markerColor}; font-size:16px;"></i>`,
+                            className: 'custom-marker',
+                            iconSize: [20, 20]
+                        })
+                    }).bindPopup(
+                        `<b>${station.callsign}</b><br>` +
+                        `<b>Frequency:</b> ${station.frequency} kHz<br>` +
+                        `<b>Location:</b> ${station.city}, ${station.state}<br>` +
+                        `<b>Power:</b> ${station.power} kW<br>` +
+                        `<b>Owner:</b> ${station.owner}<br>` +
+                        `<b>Coverage:</b> ${parseFloat(station.area).toFixed(4)} sq deg`
+                    ).bindTooltip(`${station.callsign} - ${station.frequency} kHz`);
+                    
+                    group.addLayer(marker);
+                    
+                    // Add contour if coordinates exist
+                    const stationCoords = coordsData.find(row => row.callsign === station.callsign);
+                    if (stationCoords && stationCoords.coordinates) {
+                        try {
+                            const coordinates = JSON.parse(stationCoords.coordinates);
+                            const color = regionColors[region] || '#c5b0d5';
+                            const contour = L.polyline(coordinates, {
+                                color: color,
+                                weight: 2,
+                                opacity: 0.7
+                            }).bindPopup(
+                                `<b>${station.callsign}</b><br>` +
+                                `${contourType.replace('_', '.')} m/V Coverage<br>` +
+                                `Area: ${parseFloat(station.area).toFixed(4)} sq deg`
+                            ).bindTooltip(`${station.callsign} - ${region}`);
+                            
+                            group.addLayer(contour);
+                        } catch (e) {
+                            console.warn(`Failed to parse coordinates for ${station.callsign}:`, e);
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize map with data
+        async function initializeMap() {
+            console.log('Loading contour index...');
+            const index = await loadContourIndex();
+            
+            // Load day leaders (top 10 per region)
+            const dayLeaders = index.filter(row => 
+                row.contour_type === 'day_0.5' && 
+                row.region && row.region !== 'Unknown' &&
+                row.lat && row.lon && row.area
+            );
+            
+            // Group by region and get top 10
+            const dayRegionGroups = {};
+            dayLeaders.forEach(station => {
+                if (!dayRegionGroups[station.region]) dayRegionGroups[station.region] = [];
+                dayRegionGroups[station.region].push(station);
+            });
+            
+            const dayTopStations = [];
+            Object.keys(dayRegionGroups).forEach(region => {
+                dayRegionGroups[region].sort((a, b) => parseFloat(b.area) - parseFloat(a.area));
+                dayTopStations.push(...dayRegionGroups[region].slice(0, 10));
+            });
+            
+            console.log(`Loading contours for ${dayTopStations.length} day stations...`);
+            await addContoursToGroup(dayTopStations, dayRegionGroups, 'day_0.5', 'red');
+            
+            // Load night leaders (high power stations)
+            const nightLeaders = index.filter(row => 
+                row.contour_type === 'night_2' && 
+                row.region && row.region !== 'Unknown' &&
+                row.lat && row.lon && row.area &&
+                parseFloat(row.power) >= 50
+            );
+            
+            const nightRegionGroupsData = {};
+            nightLeaders.forEach(station => {
+                if (!nightRegionGroupsData[station.region]) nightRegionGroupsData[station.region] = [];
+                nightRegionGroupsData[station.region].push(station);
+            });
+            
+            const nightTopStations = [];
+            Object.keys(nightRegionGroupsData).forEach(region => {
+                nightRegionGroupsData[region].sort((a, b) => parseFloat(b.area) - parseFloat(a.area));
+                nightTopStations.push(...nightRegionGroupsData[region].slice(0, 10));
+            });
+            
+            console.log(`Loading contours for ${nightTopStations.length} night stations...`);
+            await addContoursToGroup(nightTopStations, nightRegionGroups, 'night_2', 'darkred');
+            
+            console.log('Map initialization complete');
+        }
+        
+        // Search function
+        async function searchStation() {
+            const callsign = document.getElementById('callsignSearch').value.toUpperCase().trim();
+            const contourType = document.querySelector('input[name="contourType"]:checked').value;
+            
+            if (!callsign) {
+                alert('Please enter a callsign');
+                return;
+            }
+            
+            document.getElementById('searchResults').innerHTML = '<div class="loading">Loading...</div>';
+            
+            try {
+                const index = await loadContourIndex();
+                const station = index.find(row => 
+                    row.callsign === callsign && 
+                    row.contour_type === contourType.replace('_', '.')
+                );
+                
+                if (!station) {
+                    document.getElementById('searchResults').innerHTML = 
+                        `<div>Station "${callsign}" not found with ${contourType} contour</div>`;
+                    return;
+                }
+                
+                // Load coordinates for this type
+                const coordsData = await loadCoordinates(contourType.replace('_', '.'));
+                const stationCoords = coordsData.find(row => row.callsign === callsign);
+                
+                if (!stationCoords) {
+                    document.getElementById('searchResults').innerHTML = 
+                        `<div>Coordinates not found for ${callsign}</div>`;
+                    return;
+                }
+                
+                // Clear previous search results
+                searchGroup.clearLayers();
+                
+                // Parse and add contour
+                const coordinates = JSON.parse(stationCoords.coordinates);
+                const contour = L.polyline(coordinates, {
+                    color: '#FFD700',
+                    weight: 4,
+                    opacity: 1.0
+                }).bindPopup(
+                    `<b>${callsign} - SEARCH RESULT</b><br>` +
+                    `Contour: ${contourType}<br>` +
+                    `Coverage: ${parseFloat(station.area).toFixed(4)} sq deg`
+                );
+                searchGroup.addLayer(contour);
+                
+                // Add marker if location exists
+                if (station.lat && station.lon) {
+                    const marker = L.marker([parseFloat(station.lat), parseFloat(station.lon)], {
+                        icon: L.divIcon({
+                            html: '<i class="fa fa-star" style="color:#FFD700; font-size:20px;"></i>',
+                            className: 'custom-marker',
+                            iconSize: [24, 24]
+                        })
+                    }).bindPopup(
+                        `<b>${callsign} - SEARCH RESULT</b><br>` +
+                        `<b>Frequency:</b> ${station.frequency} kHz<br>` +
+                        `<b>Location:</b> ${station.city}, ${station.state}<br>` +
+                        `<b>Power:</b> ${station.power} kW<br>` +
+                        `<b>Owner:</b> ${station.owner}<br>` +
+                        `<b>Coverage:</b> ${parseFloat(station.area).toFixed(4)} sq deg`
+                    );
+                    searchGroup.addLayer(marker);
+                    
+                    // Pan to station
+                    map.setView([parseFloat(station.lat), parseFloat(station.lon)], 8);
+                } else {
+                    // Pan to contour center
+                    const bounds = L.latLngBounds(coordinates);
+                    map.fitBounds(bounds);
+                }
+                
+                // Show results
+                document.getElementById('searchResults').innerHTML = 
+                    `<div class="search-results"><strong>${callsign}</strong> - ${contourType}<br>` +
+                    `${station.frequency} kHz, ${station.power} kW<br>` +
+                    `Coverage: ${parseFloat(station.area).toFixed(4)} sq deg</div>`;
+                    
+            } catch (error) {
+                document.getElementById('searchResults').innerHTML = 
+                    `<div>Error loading data: ${error.message}</div>`;
+            }
+        }
+        
+        function clearSearchResults() {
+            searchGroup.clearLayers();
+            document.getElementById('searchResults').innerHTML = '';
+            document.getElementById('callsignSearch').value = '';
+        }
+        
+        // Toggle day/night views
+        function toggleDay() {
+            const dayToggle = document.getElementById('dayToggle');
+            regions.forEach(region => {
+                const regionCheckbox = document.getElementById(`region_${region.replace(/\s+/g, '_')}`);
+                if (regionCheckbox && regionCheckbox.checked) {
+                    if (dayToggle.checked) {
+                        map.addLayer(dayRegionGroups[region]);
+                    } else {
+                        map.removeLayer(dayRegionGroups[region]);
+                    }
+                }
+            });
+        }
+        
+        function toggleNight() {
+            const nightToggle = document.getElementById('nightToggle');
+            regions.forEach(region => {
+                const regionCheckbox = document.getElementById(`region_${region.replace(/\s+/g, '_')}`);
+                if (regionCheckbox && regionCheckbox.checked) {
+                    if (nightToggle.checked) {
+                        map.addLayer(nightRegionGroups[region]);
+                    } else {
+                        map.removeLayer(nightRegionGroups[region]);
+                    }
+                }
+            });
+        }
+        
+        // Event listeners
+        document.getElementById('dayToggle').addEventListener('change', toggleDay);
+        document.getElementById('nightToggle').addEventListener('change', toggleNight);
+        document.getElementById('callsignSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchStation();
+            }
+        });
+        
+        // Initialize everything
+        createRegionToggles();
+        initializeMap();
+    </script>
+</body>
+</html>
