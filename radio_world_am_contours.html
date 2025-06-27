@@ -814,6 +814,33 @@
             }
         });
         
+        // Add click handlers to day/night toggle switches to ensure they work
+        document.addEventListener('DOMContentLoaded', function() {
+            // Day toggle switch
+            const dayToggleSwitch = document.querySelector('.control-panel .toggle-switch');
+            const dayCheckbox = document.getElementById('dayToggle');
+            if (dayToggleSwitch && dayCheckbox) {
+                dayToggleSwitch.addEventListener('click', function(e) {
+                    if (e.target === dayCheckbox) return;
+                    dayCheckbox.checked = !dayCheckbox.checked;
+                    const changeEvent = new Event('change');
+                    dayCheckbox.dispatchEvent(changeEvent);
+                });
+            }
+            
+            // Night toggle switch
+            const nightToggleSwitch = document.querySelectorAll('.control-panel .toggle-switch')[1];
+            const nightCheckbox = document.getElementById('nightToggle');
+            if (nightToggleSwitch && nightCheckbox) {
+                nightToggleSwitch.addEventListener('click', function(e) {
+                    if (e.target === nightCheckbox) return;
+                    nightCheckbox.checked = !nightCheckbox.checked;
+                    const changeEvent = new Event('change');
+                    nightCheckbox.dispatchEvent(changeEvent);
+                });
+            }
+        });
+        
 
 
         // Initialize everything
