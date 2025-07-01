@@ -388,46 +388,42 @@
     
     <div id="map"></div>
     
-    <div class="panel control-panel">
-        <h4>Coverage View</h4>
-        <div class="toggle-container">
-            <span class="view-mode-label">Daytime</span>
-            <div class="toggle-switch">
-                <input type="checkbox" id="dayToggle">
-                <span class="slider"></span>
-            </div>
-        </div>
-        <div class="toggle-container">
-            <span class="view-mode-label">Nighttime 0.5 m/V Skywave (50kW+)</span>
-            <div class="toggle-switch">
-                <input type="checkbox" id="nightToggle">
-                <span class="slider"></span>
-            </div>
-        </div>
-        <button class="btn secondary" onclick="clearSearchResults()">Clear Search Results</button>
-    </div>
+
     
     <div class="panel search-panel">
         <h4>Station Search</h4>
         <input type="text" id="callsignSearch" class="search-box" placeholder="Enter callsign (e.g., WJR, KFI)" />
         <button class="btn" onclick="searchStation()">Search Station</button>
+        <button class="btn secondary" onclick="clearSearchResults()">Clear Search Results</button>
         <div id="searchResults"></div>
     </div>
     
     <div class="panel legend-panel">
         <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 10px;">
             <h4 style="margin: 0;">Regional Coverage Leaders</h4>
-            <button onclick="toggleLegendPanel()" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 18px; margin-left: auto;" id="legendToggleBtn">−</button>
+            <button onclick="toggleLegendPanel()" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 18px; margin-left: auto;" id="legendToggleBtn">+</button>
         </div>
         
-        <div id="legendContent">
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <i class="fa fa-broadcast-tower" style="color:red; margin-right: 8px;"></i>
-                <span style="font-size: 13px;">Daytime Leaders</span>
+        <div id="legendContent" style="display: none;">
+            <div class="toggle-container">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa fa-broadcast-tower" style="color:red; margin-right: 8px;"></i>
+                    <span class="view-mode-label">Daytime</span>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="dayToggle">
+                    <span class="slider"></span>
+                </div>
             </div>
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <i class="fa fa-broadcast-tower" style="color:darkblue; margin-right: 8px;"></i>
-                <span style="font-size: 13px;">Nighttime Skywave (50kW+)</span>
+            <div class="toggle-container">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa fa-broadcast-tower" style="color:darkblue; margin-right: 8px;"></i>
+                    <span class="view-mode-label">Nighttime 0.5 m/V Skywave (50kW+)</span>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="nightToggle">
+                    <span class="slider"></span>
+                </div>
             </div>
             
             <hr style="border: none; height: 1px; background: rgba(0,0,0,0.1); margin: 15px 0;">
@@ -1282,8 +1278,8 @@
         
         // Add click handlers to day/night toggle switches to ensure they work
         document.addEventListener('DOMContentLoaded', function() {
-            // Day toggle switch
-            const dayToggleSwitch = document.querySelector('.control-panel .toggle-switch');
+            // Day toggle switch (now in legend panel)
+            const dayToggleSwitch = document.querySelector('#legendContent .toggle-switch');
             const dayCheckbox = document.getElementById('dayToggle');
             if (dayToggleSwitch && dayCheckbox) {
                 dayToggleSwitch.addEventListener('click', function(e) {
@@ -1294,8 +1290,8 @@
                 });
             }
             
-            // Night toggle switch
-            const nightToggleSwitch = document.querySelectorAll('.control-panel .toggle-switch')[1];
+            // Night toggle switch (now in legend panel)
+            const nightToggleSwitch = document.querySelectorAll('#legendContent .toggle-switch')[1];
             const nightCheckbox = document.getElementById('nightToggle');
             if (nightToggleSwitch && nightCheckbox) {
                 nightToggleSwitch.addEventListener('click', function(e) {
