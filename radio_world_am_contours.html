@@ -205,10 +205,68 @@
         
         .search-results {
             margin-top: 10px;
-            padding: 10px;
+            padding: 15px;
             background: rgba(76, 175, 80, 0.1);
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 13px;
+            border: 1px solid rgba(76, 175, 80, 0.2);
+        }
+        
+        .contour-toggles {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .contour-toggle-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .contour-label {
+            font-size: 12px;
+            color: #555;
+            flex-grow: 1;
+        }
+        
+        .contour-coverage {
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+        }
+        
+        .mini-toggle {
+            width: 35px;
+            height: 18px;
+        }
+        
+        .mini-toggle .slider {
+            border-radius: 18px;
+        }
+        
+        .mini-toggle .slider:before {
+            height: 12px;
+            width: 12px;
+            left: 3px;
+            bottom: 3px;
+        }
+        
+        .mini-toggle input:checked + .slider:before {
+            transform: translateX(17px);
+        }
+        
+        .contour-color-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 3px;
+            margin-right: 8px;
+            border-radius: 1px;
         }
         
         .footer-note {
@@ -218,6 +276,236 @@
             font-size: 11px;
             color: #666;
             line-height: 1.4;
+        }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .panel {
+                position: fixed;
+                max-width: 85vw;
+                max-height: 70vh;
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            .search-panel {
+                top: 10px;
+                left: 10px;
+                max-width: calc(100vw - 20px);
+                right: 10px;
+            }
+            
+            .legend-panel {
+                top: auto;
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                max-width: calc(100vw - 20px);
+                max-height: 50vh;
+            }
+            
+            h4 {
+                font-size: 14px;
+                margin: 0 0 10px 0;
+            }
+            
+            .search-box {
+                width: 100%;
+                padding: 10px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                margin: 6px 0;
+            }
+            
+            .btn {
+                padding: 10px;
+                font-size: 14px;
+                margin: 6px 0;
+            }
+            
+            .toggle-container {
+                margin: 8px 0;
+            }
+            
+            .view-mode-label {
+                font-size: 12px;
+            }
+            
+            .region-toggle {
+                padding: 6px 0;
+            }
+            
+            .region-label {
+                font-size: 11px;
+            }
+            
+            .footer-note {
+                font-size: 10px;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            
+            .search-results {
+                padding: 10px;
+                font-size: 12px;
+                margin-top: 8px;
+            }
+            
+            /* Smaller toggles on mobile */
+            .toggle-switch {
+                width: 40px;
+                height: 20px;
+            }
+            
+            .toggle-switch .slider:before {
+                height: 14px;
+                width: 14px;
+                left: 3px;
+                bottom: 3px;
+            }
+            
+            .toggle-switch input:checked + .slider:before {
+                transform: translateX(20px);
+            }
+            
+            .region-toggle-switch {
+                width: 35px;
+                height: 18px;
+            }
+            
+            .region-toggle-switch .slider:before {
+                height: 12px;
+                width: 12px;
+                left: 3px;
+                bottom: 3px;
+            }
+            
+            .region-toggle-switch input:checked + .slider:before {
+                transform: translateX(17px);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .panel {
+                padding: 10px;
+                font-size: 13px;
+            }
+            
+            .search-panel {
+                max-width: calc(100vw - 16px);
+                left: 8px;
+                right: 8px;
+                top: 8px;
+            }
+            
+            .legend-panel {
+                max-width: calc(100vw - 16px);
+                left: 8px;
+                right: 8px;
+                bottom: 8px;
+                max-height: 45vh;
+            }
+            
+            h4 {
+                font-size: 13px;
+            }
+            
+            .view-mode-label {
+                font-size: 11px;
+            }
+            
+            .region-label {
+                font-size: 10px;
+            }
+            
+            .btn {
+                padding: 8px;
+                font-size: 13px;
+            }
+            
+            .search-box {
+                padding: 8px;
+                font-size: 16px;
+            }
+        }
+        
+        .station-rankings {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        .station-rankings h5 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        
+        .ranking-item {
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(0,0,0,0.02);
+            border-radius: 4px;
+        }
+        
+        .ranking-item strong {
+            color: #2c3e50;
+            font-size: 13px;
+        }
+        
+        .ranking-detail {
+            font-size: 12px;
+            color: #666;
+            display: block;
+            margin-top: 2px;
+        }
+        
+        /* Loading spinner styles */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        .loading-content {
+            text-align: center;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .loading-subtext {
+            font-size: 12px;
+            color: #666;
         }
         
         .view-mode-label {
@@ -239,56 +527,53 @@
     </style>
 </head>
 <body>
+    <!-- Loading overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Loading AM Radio Coverage Data</div>
+            <div class="loading-subtext">Fetching FCC contour data and regional leaders...</div>
+        </div>
+    </div>
+    
     <div id="map"></div>
     
-    <div class="panel control-panel">
-        <h4>Coverage View</h4>
-        <div class="toggle-container">
-            <span class="view-mode-label">Daytime</span>
-            <div class="toggle-switch">
-                <input type="checkbox" id="dayToggle" checked>
-                <span class="slider"></span>
-            </div>
-        </div>
-        <div class="toggle-container">
-            <span class="view-mode-label">Nighttime 2.0 m/V (50kW+)</span>
-            <div class="toggle-switch">
-                <input type="checkbox" id="nightToggle">
-                <span class="slider"></span>
-            </div>
-        </div>
-        <button class="btn secondary" onclick="clearSearchResults()">Clear Search Results</button>
-    </div>
+
     
     <div class="panel search-panel">
         <h4>Station Search</h4>
         <input type="text" id="callsignSearch" class="search-box" placeholder="Enter callsign (e.g., WJR, KFI)" />
-        <div class="radio-group">
-            <label>
-                <input type="radio" name="contourType" value="day_0_5" checked> Day 0.5 m/V
-            </label>
-            <label>
-                <input type="radio" name="contourType" value="day_2"> Day 2.0 m/V
-            </label>
-        </div>
-        <button class="btn" onclick="searchStation()">Show Contour</button>
+        <button class="btn" onclick="searchStation()">Search Station</button>
+        <button class="btn secondary" onclick="clearSearchResults()">Clear Search Results</button>
         <div id="searchResults"></div>
     </div>
     
     <div class="panel legend-panel">
         <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 10px;">
             <h4 style="margin: 0;">Regional Coverage Leaders</h4>
-            <button onclick="toggleLegendPanel()" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 18px; margin-left: auto;" id="legendToggleBtn">−</button>
+            <button onclick="toggleLegendPanel()" style="background: none; border: none; color: #007bff; cursor: pointer; font-size: 18px; margin-left: auto;" id="legendToggleBtn">+</button>
         </div>
         
-        <div id="legendContent">
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <i class="fa fa-broadcast-tower" style="color:red; margin-right: 8px;"></i>
-                <span style="font-size: 13px;">Daytime Leaders</span>
+        <div id="legendContent" style="display: none;">
+            <div class="toggle-container">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa fa-broadcast-tower" style="color:red; margin-right: 8px;"></i>
+                    <span class="view-mode-label">Daytime</span>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="dayToggle">
+                    <span class="slider"></span>
+                </div>
             </div>
-            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                <i class="fa fa-broadcast-tower" style="color:darkred; margin-right: 8px;"></i>
-                <span style="font-size: 13px;">Nighttime High-Power (50kW+)</span>
+            <div class="toggle-container">
+                <div style="display: flex; align-items: center;">
+                    <i class="fa fa-broadcast-tower" style="color:darkblue; margin-right: 8px;"></i>
+                    <span class="view-mode-label">Nighttime 0.5 m/V Skywave (50kW+)</span>
+                </div>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="nightToggle">
+                    <span class="slider"></span>
+                </div>
             </div>
             
             <hr style="border: none; height: 1px; background: rgba(0,0,0,0.1); margin: 15px 0;">
@@ -312,6 +597,7 @@
                 • Toggle day/night views<br>
                 • Show/hide regions individually<br>
                 • Search any station by callsign<br>
+                • Show multiple contours per station<br>
                 • Click markers/contours for details<br><br>
                 <strong>Nick Langan (Radio World)</strong><br>
                 Exploring the FCC contour data of U.S. AM radio stations
@@ -355,12 +641,42 @@
         
         // Initialize region groups
         regions.forEach(region => {
-            dayRegionGroups[region] = L.layerGroup().addTo(map);
+            dayRegionGroups[region] = L.layerGroup();
             nightRegionGroups[region] = L.layerGroup();
         });
         
         // Data cache
         var contourIndex = null;
+        
+        // Calculate polygon area using shoelace formula
+        function calculatePolygonArea(coords) {
+            if (coords.length < 3) return 0;
+            
+            let area = 0;
+            for (let i = 0; i < coords.length; i++) {
+                const j = (i + 1) % coords.length;
+                area += coords[i][1] * coords[j][0]; // lon * lat
+                area -= coords[j][1] * coords[i][0]; // lon * lat
+            }
+            return Math.abs(area) / 2;
+        }
+        
+        // Convert LINESTRING to coordinate array for Leaflet
+        function parseLineStringToCoords(linestring) {
+            if (!linestring || !linestring.startsWith('LINESTRING(')) return [];
+            
+            try {
+                const coordsString = linestring.slice(11, -1); // Remove LINESTRING( and )
+                const coordPairs = coordsString.split(',');
+                return coordPairs.map(pair => {
+                    const [lon, lat] = pair.trim().split(' ').map(parseFloat);
+                    return [lat, lon]; // Leaflet uses [lat, lon] format
+                });
+            } catch (error) {
+                console.error('Error parsing LINESTRING:', error);
+                return [];
+            }
+        }
         
         // Create region toggle controls
         function createRegionToggles() {
@@ -376,7 +692,7 @@
                         <span>${region}</span>
                     </div>
                     <div class="toggle-switch region-toggle-switch">
-                        <input type="checkbox" id="region_${region.replace(/\s+/g, '_')}" checked>
+                        <input type="checkbox" id="region_${region.replace(/\s+/g, '_')}">
                         <span class="slider"></span>
                     </div>
                 `;
@@ -461,32 +777,93 @@
             }
         }
         
-        // Load data functions
+        // Load FCC contour data
         async function loadContourIndex() {
             if (!contourIndex) {
                 try {
-                    const response = await fetch('contour_index.csv');
-                    const text = await response.text();
-                    contourIndex = parseCSV(text);
+                    // Load FCC contour data
+                    const contourResponse = await fetch('fcc_am_contours_20250628_170923.csv');
+                    const contourText = await contourResponse.text();
+                    const contourData = parseCSV(contourText);
+                    console.log(`Loaded ${contourData.length} contour records`);
+                    
+                    // Load AM station data
+                    const stationResponse = await fetch('real AM.csv');
+                    const stationText = await stationResponse.text();
+                    const stationData = parseCSV(stationText);
+                    console.log(`Loaded ${stationData.length} station records`);
+                    
+                    // Create station lookup by callsign
+                    const stationLookup = {};
+                    stationData.forEach(station => {
+                        if (station.callsign) {
+                            stationLookup[station.callsign] = station;
+                        }
+                    });
+                    
+                    // Merge contour data with station data and calculate areas
+                    contourIndex = contourData.map(contour => {
+                        const station = stationLookup[contour.callsign] || {};
+                        let area = 0;
+                        
+                        // Calculate area from coordinates if available
+                        if (contour.coordinates) {
+                            try {
+                                // Parse LINESTRING coordinates
+                                let coordsString = contour.coordinates;
+                                if (coordsString.startsWith('LINESTRING(') && coordsString.endsWith(')')) {
+                                    coordsString = coordsString.slice(11, -1);
+                                    const coordPairs = coordsString.split(',');
+                                    const coords = coordPairs.map(pair => {
+                                        const [lon, lat] = pair.trim().split(' ').map(parseFloat);
+                                        return [lat, lon]; // Leaflet uses [lat, lon] format
+                                    });
+                                    
+                                    // Calculate area using shoelace formula
+                                    area = calculatePolygonArea(coords);
+                                }
+                            } catch (error) {
+                                console.log(`Error calculating area for ${contour.callsign}:`, error);
+                            }
+                        }
+                        
+                        return {
+                            ...contour,
+                            lat: station.lat || '',
+                            lon: station.lon ? -Math.abs(parseFloat(station.lon)) : '', // Ensure negative longitude for US
+                            city: station.afac_community_city || '',
+                            state: station.afac_community_state_code || '',
+                            power: station.power || '',
+                            owner: station.owner || '',
+                            area: area
+                        };
+                    });
+                    
+                    console.log(`Created ${contourIndex.length} merged records`);
                 } catch (error) {
-                    console.error('Error loading contour index:', error);
+                    console.error('Error loading contour data:', error);
                     throw error;
                 }
             }
             return contourIndex;
         }
         
-        async function loadCoordinates(type) {
-            const filename = `coordinates_${type.replace('.', '_')}.csv`;
-            try {
-                const response = await fetch(filename);
-                const text = await response.text();
-                return parseCSV(text);
-            } catch (error) {
-                console.error(`Error loading ${filename}:`, error);
-                throw error;
-            }
-        }
+        // Search contour layer groups for multiple contours
+        var searchContourGroups = {
+            'day_0.5': L.layerGroup(),
+            'day_2.0': L.layerGroup(), 
+            'night_0.5': L.layerGroup()
+        };
+        
+        // Add search contour groups to map initially
+        Object.values(searchContourGroups).forEach(group => group.addTo(map));
+        
+        // Contour colors for search results
+        var contourColors = {
+            'day_0.5': '#FFD700',    // Gold
+            'day_2.0': '#FF6B35',    // Orange-red
+            'night_0.5': '#8A2BE2'  // Blue-violet
+        };
         
         function parseCSV(text) {
             const lines = text.split('\n');
@@ -553,121 +930,168 @@
         
         // Add contours to specific region group
         async function addContoursToRegionGroups(stations, contourType, markerColor) {
-            const coordsData = await loadCoordinates(contourType);
-            
-            stations.forEach(station => {
-                const region = station.region;
-                if (!region || region === 'Unknown') return;
-                
-                // Determine which layer group to use
-                const targetGroups = contourType.includes('night') ? nightRegionGroups : dayRegionGroups;
-                const group = targetGroups[region];
-                
-                if (!group) return;
-                
-                // Add marker
-                if (station.lat && station.lon) {
-                    const marker = L.marker([parseFloat(station.lat), parseFloat(station.lon)], {
-                        icon: L.divIcon({
-                            html: `<i class="fa fa-broadcast-tower" style="color:${markerColor}; font-size:16px;"></i>`,
-                            className: 'custom-marker',
-                            iconSize: [20, 20]
-                        })
-                    }).bindPopup(
-                        `<b>${station.callsign}</b><br>` +
-                        `<b>Frequency:</b> ${station.frequency} kHz<br>` +
-                        `<b>Location:</b> ${station.city}, ${station.state}<br>` +
-                        `<b>Power:</b> ${station.power} kW<br>` +
-                        `<b>Owner:</b> ${station.owner}<br>` +
-                        `<b>Coverage:</b> ${parseFloat(station.area).toFixed(4)} sq deg`
-                    ).bindTooltip(`${station.callsign} - ${station.frequency} kHz`);
+            try {
+                stations.forEach(station => {
+                    const region = station.region;
+                    if (!region || region === 'Unknown') return;
                     
-                    group.addLayer(marker);
+                    // Determine which layer group to use
+                    const targetGroups = contourType.includes('night') ? nightRegionGroups : dayRegionGroups;
+                    const group = targetGroups[region];
                     
-                    // Add contour if coordinates exist
-                    const stationCoords = coordsData.find(row => row.callsign === station.callsign);
-                    if (stationCoords && stationCoords.coordinates) {
-                        try {
-                            const coordinates = JSON.parse(stationCoords.coordinates);
-                            const color = regionColors[region] || '#c5b0d5';
-                            const contour = L.polyline(coordinates, {
-                                color: color,
-                                weight: 2,
-                                opacity: 0.7
-                            }).bindPopup(
-                                `<b>${station.callsign}</b><br>` +
-                                `${contourType.replace('_', '.')} m/V Coverage<br>` +
-                                `Area: ${parseFloat(station.area).toFixed(4)} sq deg`
-                            ).bindTooltip(`${station.callsign} - ${region}`);
-                            
-                            group.addLayer(contour);
-                        } catch (e) {
-                            // Silently skip stations with invalid coordinates
+                    if (!group) return;
+                    
+                    // Add marker
+                    if (station.lat && station.lon) {
+                        const marker = L.marker([parseFloat(station.lat), parseFloat(station.lon)], {
+                            icon: L.divIcon({
+                                html: `<i class="fa fa-broadcast-tower" style="color:${markerColor}; font-size:16px;"></i>`,
+                                className: 'custom-marker',
+                                iconSize: [20, 20]
+                            })
+                        }).bindPopup(
+                            `<b>${station.callsign}</b><br>` +
+                            `<b>Frequency:</b> ${station.frequency} kHz<br>` +
+                            `<b>Location:</b> ${station.city || 'Unknown'}, ${station.state || 'Unknown'}<br>` +
+                            `<b>Power:</b> ${station.power} kW<br>` +
+                            `<b>Owner:</b> ${station.owner || 'Unknown'}<br>` +
+                            `<b>Coverage:</b> ${parseFloat(station.area || 0).toFixed(4)} sq deg`
+                        ).bindTooltip(`${station.callsign} - ${station.frequency} kHz`);
+                        
+                        group.addLayer(marker);
+                        
+                        // Add contour if coordinates exist in the station data
+                        if (station.coordinates) {
+                            try {
+                                const coordinates = parseLineStringToCoords(station.coordinates);
+                                if (coordinates.length > 0) {
+                                    const color = regionColors[region] || '#c5b0d5';
+                                    const contour = L.polyline(coordinates, {
+                                        color: color,
+                                        weight: 2,
+                                        opacity: 0.7
+                                    }).bindPopup(
+                                        `<b>${station.callsign}</b><br>` +
+                                        `${contourType.replace('_', '.')} m/V Coverage<br>` +
+                                        `Area: ${parseFloat(station.area || 0).toFixed(4)} sq deg`
+                                    ).bindTooltip(`${station.callsign} - ${region}`);
+                                    
+                                    group.addLayer(contour);
+                                }
+                            } catch (e) {
+                                console.log(`Invalid coordinates for ${station.callsign}:`, e);
+                            }
                         }
                     }
-                }
-            });
+                });
+            } catch (error) {
+                console.error('Error adding contours to region groups:', error);
+            }
         }
         
         // Initialize map with data
         async function initializeMap() {
             try {
-                console.log('Loading contour index...');
-                const index = await loadContourIndex();
+                // Show loading spinner
+                document.getElementById('loadingOverlay').style.display = 'flex';
+                
+                console.log('Loading FCC contour data...');
+                const data = await loadContourIndex();
+                
+                // Add regions to each station
+                data.forEach(station => {
+                    if (station.state) {
+                        station.region = getRegionFromState(station.state);
+                    }
+                });
                 
                 // Load day leaders (top 10 per region)
-                const dayLeaders = index.filter(row => 
+                const dayLeaders = data.filter(row => 
                     row.contour_type === 'day_0.5' && 
                     row.region && row.region !== 'Unknown' &&
-                    row.lat && row.lon && row.area
+                    row.lat && row.lon && row.area && row.coordinates
                 );
                 
                 // Group by region and get top 10
                 const dayRegionData = {};
+                regions.forEach(region => dayRegionData[region] = []);
+                
                 dayLeaders.forEach(station => {
-                    if (!dayRegionData[station.region]) dayRegionData[station.region] = [];
-                    dayRegionData[station.region].push(station);
+                    if (dayRegionData[station.region]) {
+                        dayRegionData[station.region].push(station);
+                    }
                 });
                 
                 const dayTopStations = [];
                 Object.keys(dayRegionData).forEach(region => {
-                    dayRegionData[region].sort((a, b) => parseFloat(b.area) - parseFloat(a.area));
+                    dayRegionData[region].sort((a, b) => parseFloat(b.area || 0) - parseFloat(a.area || 0));
                     dayTopStations.push(...dayRegionData[region].slice(0, 10));
                 });
                 
+                console.log(`Found ${dayTopStations.length} day stations`);
                 await addContoursToRegionGroups(dayTopStations, 'day_0.5', 'red');
                 
-                // Load night leaders (high power stations)
-                const nightLeaders = index.filter(row => 
-                    row.contour_type === 'night_2' && 
+                // Load night leaders (high power stations with 0.5 m/V skywave)
+                const nightLeaders = data.filter(row => 
+                    row.contour_type === 'night_0.5' && 
                     row.region && row.region !== 'Unknown' &&
-                    row.lat && row.lon && row.area &&
-                    parseFloat(row.power) >= 50
+                    row.lat && row.lon && row.area && row.coordinates &&
+                    parseFloat(row.power || 0) >= 50
                 );
                 
                 const nightRegionData = {};
+                regions.forEach(region => nightRegionData[region] = []);
+                
                 nightLeaders.forEach(station => {
-                    if (!nightRegionData[station.region]) nightRegionData[station.region] = [];
-                    nightRegionData[station.region].push(station);
+                    if (nightRegionData[station.region]) {
+                        nightRegionData[station.region].push(station);
+                    }
                 });
                 
                 const nightTopStations = [];
                 Object.keys(nightRegionData).forEach(region => {
-                    nightRegionData[region].sort((a, b) => parseFloat(b.area) - parseFloat(a.area));
+                    nightRegionData[region].sort((a, b) => parseFloat(b.area || 0) - parseFloat(a.area || 0));
                     nightTopStations.push(...nightRegionData[region].slice(0, 10));
                 });
                 
-                await addContoursToRegionGroups(nightTopStations, 'night_2', 'darkred');
+                console.log(`Found ${nightTopStations.length} night stations`);
+                await addContoursToRegionGroups(nightTopStations, 'night_0.5', 'darkblue');
+                
+                // Hide loading spinner when complete
+                document.getElementById('loadingOverlay').style.display = 'none';
             } catch (error) {
                 console.error('Error initializing map:', error);
+                
+                // Hide spinner and show error
+                document.getElementById('loadingOverlay').style.display = 'none';
                 alert('Error loading map data. Please check the console for details.');
             }
         }
         
-        // Search function
+        // Get region from state code
+        function getRegionFromState(state) {
+            const regionMap = {
+                'MI': 'Great Lakes', 'WI': 'Great Lakes', 'IL': 'Great Lakes', 'IN': 'Great Lakes', 'OH': 'Great Lakes', 'PA': 'Great Lakes',
+                'ME': 'Northeast', 'NH': 'Northeast', 'VT': 'Northeast', 'MA': 'Northeast', 'RI': 'Northeast', 'CT': 'Northeast', 'NY': 'Northeast',
+                'NJ': 'Mid-Atlantic', 'DE': 'Mid-Atlantic', 'MD': 'Mid-Atlantic', 'DC': 'Mid-Atlantic', 'WV': 'Mid-Atlantic', 'VA': 'Mid-Atlantic',
+                'NC': 'Southeast', 'SC': 'Southeast', 'GA': 'Southeast', 'FL': 'Southeast',
+                'AL': 'Gulf Coast', 'MS': 'Gulf Coast', 'LA': 'Gulf Coast', 'TX': 'Gulf Coast',
+                'AR': 'Mid-South', 'MO': 'Mid-South', 'KY': 'Mid-South', 'TN': 'Mid-South',
+                'KS': 'Plains', 'NE': 'Plains', 'IA': 'Plains', 'OK': 'Plains',
+                'ND': 'Upper Midwest', 'SD': 'Upper Midwest', 'MN': 'Upper Midwest',
+                'MT': 'Rockies', 'WY': 'Rockies', 'CO': 'Rockies', 'UT': 'Rockies', 'ID': 'Rockies',
+                'AZ': 'Southwest', 'NM': 'Southwest', 'NV': 'Southwest',
+                'WA': 'Pacific Northwest', 'OR': 'Pacific Northwest',
+                'CA': 'California',
+                'AK': 'Alaska',
+                'HI': 'Hawaii'
+            };
+            return regionMap[state] || 'Unknown';
+        }
+        
+        // Enhanced search function with multiple contour support
         async function searchStation() {
             const callsign = document.getElementById('callsignSearch').value.toUpperCase().trim();
-            const contourType = document.querySelector('input[name="contourType"]:checked').value;
             
             if (!callsign) {
                 alert('Please enter a callsign');
@@ -677,57 +1101,107 @@
             document.getElementById('searchResults').innerHTML = '<div class="loading">Loading...</div>';
             
             try {
-                const index = await loadContourIndex();
+                const data = await loadContourIndex();
                 
-                // Convert radio button values to CSV contour types
-                let csvContourType = contourType;
-                if (contourType === 'day_0_5') {
-                    csvContourType = 'day_0.5';
-                }
-                // day_2 and night_2 stay the same
+                // Find all contour types for this station
+                const stationContours = {
+                    'day_0.5': data.find(row => row.callsign === callsign && row.contour_type === 'day_0.5'),
+                    'day_2.0': data.find(row => row.callsign === callsign && row.contour_type === 'day_2.0'),
+                    'night_0.5': data.find(row => row.callsign === callsign && row.contour_type === 'night_0.5')
+                };
                 
-                const station = index.find(row => 
-                    row.callsign === callsign && 
-                    row.contour_type === csvContourType
-                );
+                // Get station info from any available contour
+                const stationInfo = stationContours['day_0.5'] || 
+                                  stationContours['day_2.0'] || 
+                                  stationContours['night_0.5'];
                 
-                if (!station) {
+                if (!stationInfo) {
                     document.getElementById('searchResults').innerHTML = 
-                        `<div>Station "${callsign}" not found with ${contourType.replace('_', ' ')} contour</div>`;
-                    return;
-                }
-                
-                // Load coordinates for this type
-                // Convert CSV contour type to filename format
-                let filenameType = csvContourType.replace('.', '_');
-                const coordsData = await loadCoordinates(filenameType);
-                const stationCoords = coordsData.find(row => row.callsign === callsign);
-                
-                if (!stationCoords) {
-                    document.getElementById('searchResults').innerHTML = 
-                        `<div>Coordinates not found for ${callsign}</div>`;
+                        `<div>No data found for station "${callsign}"</div>`;
                     return;
                 }
                 
                 // Clear previous search results
-                searchGroup.clearLayers();
+                Object.values(searchContourGroups).forEach(group => group.clearLayers());
                 
-                // Parse and add contour
-                const coordinates = JSON.parse(stationCoords.coordinates);
-                const contour = L.polyline(coordinates, {
-                    color: '#FFD700',
-                    weight: 4,
-                    opacity: 1.0
-                }).bindPopup(
-                    `<b>${callsign} - SEARCH RESULT</b><br>` +
-                    `Contour: ${contourType}<br>` +
-                    `Coverage: ${parseFloat(station.area).toFixed(4)} sq deg`
-                );
-                searchGroup.addLayer(contour);
+                // Pan to station location
+                if (stationInfo.lat && stationInfo.lon) {
+                    map.setView([parseFloat(stationInfo.lat), parseFloat(stationInfo.lon)], 8);
+                }
                 
-                // Add marker if location exists
-                if (station.lat && station.lon) {
-                    const marker = L.marker([parseFloat(station.lat), parseFloat(station.lon)], {
+                // Create results display with contour toggles
+                let resultsHTML = `
+                    <div class="search-results">
+                        <strong>Callsign:</strong> ${callsign}<br>
+                        <strong>Frequency:</strong> ${stationInfo.frequency} kHz<br>
+                        <strong>City:</strong> ${stationInfo.city || 'Unknown'}<br>
+                        <strong>State:</strong> ${stationInfo.state || 'Unknown'}<br>
+                        <strong>Owner:</strong> ${stationInfo.owner || 'Unknown'}<br>
+                        <strong>Power:</strong> ${stationInfo.power} kW
+                        
+                        <div class="contour-toggles">
+                            <div style="font-weight: 500; margin-bottom: 10px; font-size: 14px;">Available Contours:</div>
+                `;
+                
+                // Add toggle controls for each available contour type
+                const contourLabels = {
+                    'day_0.5': 'Day 0.5 m/V',
+                    'day_2.0': 'Day 2.0 m/V', 
+                    'night_0.5': 'Night 0.5 m/V Skywave'
+                };
+                
+                // Calculate rankings first
+                const stationRankings = await calculateStationRankings(callsign, stationContours, data);
+                
+                Object.keys(contourLabels).forEach(contourType => {
+                    if (stationContours[contourType]) {
+                        const coverage = parseFloat(stationContours[contourType].area || 0).toFixed(4);
+                        const color = contourColors[contourType];
+                        
+                        // Get ranking info for this contour type
+                        let rankingText = '';
+                        if (stationRankings[contourType]) {
+                            const rank = stationRankings[contourType];
+                            const regionName = stationInfo.region || 'Region';
+                            rankingText = ` (#${rank.overall}/${rank.totalOverall} overall, #${rank.regional}/${rank.totalRegional} ${regionName})`;
+                        }
+                        
+                        resultsHTML += `
+                            <div class="contour-toggle-item">
+                                <div class="contour-label">
+                                    <span class="contour-color-indicator" style="background-color: ${color}"></span>
+                                    ${contourLabels[contourType]}
+                                    <div class="contour-coverage">${coverage} sq deg${rankingText}</div>
+                                </div>
+                                <div class="toggle-switch mini-toggle" data-callsign="${callsign}" data-contour="${contourType}">
+                                    <input type="checkbox" id="contour_${contourType}">
+                                    <span class="slider"></span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                resultsHTML += `
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('searchResults').innerHTML = resultsHTML;
+                
+                // Add station marker immediately upon search
+                if (stationInfo.lat && stationInfo.lon) {
+                    // Clear any existing search markers first
+                    Object.values(searchContourGroups).forEach(group => {
+                        group.eachLayer(layer => {
+                            if (layer instanceof L.Marker) {
+                                group.removeLayer(layer);
+                            }
+                        });
+                    });
+                    
+                    // Add the station marker to the first search group
+                    const marker = L.marker([parseFloat(stationInfo.lat), parseFloat(stationInfo.lon)], {
                         icon: L.divIcon({
                             html: '<i class="fa fa-star" style="color:#FFD700; font-size:20px;"></i>',
                             className: 'custom-marker',
@@ -735,34 +1209,45 @@
                         })
                     }).bindPopup(
                         `<b>${callsign} - SEARCH RESULT</b><br>` +
-                        `<b>Frequency:</b> ${station.frequency} kHz<br>` +
-                        `<b>Location:</b> ${station.city}, ${station.state}<br>` +
-                        `<b>Power:</b> ${station.power} kW<br>` +
-                        `<b>Owner:</b> ${station.owner}<br>` +
-                        `<b>Coverage:</b> ${parseFloat(station.area).toFixed(4)} sq deg`
+                        `<b>Frequency:</b> ${stationInfo.frequency} kHz<br>` +
+                        `<b>Location:</b> ${stationInfo.city || 'Unknown'}, ${stationInfo.state || 'Unknown'}<br>` +
+                        `<b>Power:</b> ${stationInfo.power} kW<br>` +
+                        `<b>Owner:</b> ${stationInfo.owner || 'Unknown'}`
                     );
-                    searchGroup.addLayer(marker);
                     
-                    // Pan to station
-                    map.setView([parseFloat(station.lat), parseFloat(station.lon)], 8);
-                } else {
-                    // Pan to contour center
-                    const bounds = L.latLngBounds(coordinates);
-                    map.fitBounds(bounds);
+                    // Add to the first available search contour group
+                    const firstGroup = Object.values(searchContourGroups)[0];
+                    firstGroup.addLayer(marker);
                 }
                 
-                // Show results
-                document.getElementById('searchResults').innerHTML = 
-                    `<div class="search-results">
-                        <strong>Callsign:</strong> ${callsign}<br>
-                        <strong>Frequency:</strong> ${station.frequency} kHz<br>
-                        <strong>City:</strong> ${station.city || 'Unknown'}<br>
-                        <strong>State:</strong> ${station.state || 'Unknown'}<br>
-                        <strong>Owner:</strong> ${station.owner || 'Unknown'}<br>
-                        <strong>Power:</strong> ${station.power} kW<br>
-                        <strong>Coverage:</strong> ${parseFloat(station.area).toFixed(4)} sq deg
-                    </div>`;
-                    
+                // Add event listeners to the contour toggles
+                Object.keys(contourLabels).forEach(contourType => {
+                    if (stationContours[contourType]) {
+                        const checkbox = document.getElementById(`contour_${contourType}`);
+                        const toggleSwitch = document.querySelector(`[data-callsign="${callsign}"][data-contour="${contourType}"]`);
+                        
+                        if (checkbox && toggleSwitch) {
+                            // Add change event to checkbox
+                            checkbox.addEventListener('change', function() {
+                                toggleContour(callsign, contourType, this.checked);
+                            });
+                            
+                            // Add click event to toggle switch div to ensure clicks work
+                            toggleSwitch.addEventListener('click', function(e) {
+                                // Prevent double-firing if the checkbox was already clicked
+                                if (e.target === checkbox) return;
+                                
+                                // Toggle the checkbox manually
+                                checkbox.checked = !checkbox.checked;
+                                
+                                // Trigger the change event manually
+                                const changeEvent = new Event('change');
+                                checkbox.dispatchEvent(changeEvent);
+                            });
+                        }
+                    }
+                });
+                
             } catch (error) {
                 console.error('Search error:', error);
                 document.getElementById('searchResults').innerHTML = 
@@ -770,8 +1255,135 @@
             }
         }
         
+
+        
+        // Load and display a specific contour
+        async function loadAndDisplayContour(callsign, contourType, show, stationData) {
+            try {
+                if (!stationData) {
+                    const data = await loadContourIndex();
+                    stationData = data.find(row => row.callsign === callsign && row.contour_type === contourType);
+                }
+                
+                if (!stationData || !stationData.coordinates) {
+                    console.log(`No coordinates found for ${callsign} ${contourType}`);
+                    return;
+                }
+                
+                const group = searchContourGroups[contourType];
+                
+                // Clear existing contours for this type (but keep markers)
+                group.eachLayer(layer => {
+                    if (!(layer instanceof L.Marker)) {
+                        group.removeLayer(layer);
+                    }
+                });
+                
+                if (show) {
+                    try {
+                        const coords = parseLineStringToCoords(stationData.coordinates);
+                        if (coords.length > 0) {
+                            const color = contourColors[contourType] || '#FFD700';
+                            
+                            // Add contour
+                            const contour = L.polyline(coords, {
+                                color: color,
+                                weight: 4,
+                                opacity: 0.9
+                            }).bindPopup(
+                                `<b>${callsign} - ${contourType.replace('_', ' ').replace('.', ' ')}</b><br>` +
+                                `Coverage: ${parseFloat(stationData.area || 0).toFixed(4)} sq deg`
+                            );
+                            group.addLayer(contour);
+                            
+                            // Don't add marker here anymore - it's added immediately upon search
+                        }
+                    } catch (parseError) {
+                        console.error(`Error parsing coordinates for ${callsign} ${contourType}:`, parseError);
+                        console.log('Raw coordinates:', stationData.coordinates);
+                    }
+                }
+            } catch (error) {
+                console.error(`Error loading contour ${contourType}:`, error);
+            }
+        }
+        
+        // Calculate station rankings for coverage area
+        async function calculateStationRankings(callsign, stationContours, allData) {
+            const rankings = {};
+            
+            try {
+                // Get the station's region
+                const stationRegion = Object.values(stationContours).find(s => s && s.region)?.region;
+                
+                Object.keys(stationContours).forEach(contourType => {
+                    if (stationContours[contourType]) {
+                        const stationArea = parseFloat(stationContours[contourType].area || 0);
+                        
+                        // Filter all stations for this contour type
+                        const allStationsOfType = allData.filter(row => 
+                            row.contour_type === contourType && 
+                            row.area && 
+                            parseFloat(row.area) > 0
+                        );
+                        
+                        // Sort by area (descending)
+                        allStationsOfType.sort((a, b) => parseFloat(b.area) - parseFloat(a.area));
+                        
+                        // Find overall rank
+                        const overallRank = allStationsOfType.findIndex(station => 
+                            station.callsign === callsign
+                        ) + 1;
+                        
+                        // Filter for regional stations
+                        const regionalStations = allStationsOfType.filter(row => 
+                            row.region === stationRegion
+                        );
+                        
+                        // Find regional rank
+                        const regionalRank = regionalStations.findIndex(station => 
+                            station.callsign === callsign
+                        ) + 1;
+                        
+                        if (overallRank > 0) {
+                            rankings[contourType] = {
+                                overall: overallRank,
+                                totalOverall: allStationsOfType.length,
+                                regional: regionalRank > 0 ? regionalRank : 'N/A',
+                                totalRegional: regionalStations.length,
+                                area: stationArea
+                            };
+                        }
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Error calculating rankings:', error);
+            }
+            
+            return rankings;
+        }
+        
+        // Toggle individual contour visibility
+        async function toggleContour(callsign, contourType, show) {
+            try {
+                console.log(`Toggling ${contourType} for ${callsign}: ${show}`);
+                if (show) {
+                    // Load and display the contour
+                    const data = await loadContourIndex();
+                    const stationData = data.find(row => row.callsign === callsign && row.contour_type === contourType);
+                    await loadAndDisplayContour(callsign, contourType, true, stationData);
+                } else {
+                    // Hide the contour
+                    await loadAndDisplayContour(callsign, contourType, false);
+                }
+            } catch (error) {
+                console.error(`Error toggling contour ${contourType}:`, error);
+            }
+        }
+        
         function clearSearchResults() {
-            searchGroup.clearLayers();
+            Object.values(searchContourGroups).forEach(group => group.clearLayers());
             document.getElementById('searchResults').innerHTML = '';
             document.getElementById('callsignSearch').value = '';
         }
@@ -816,8 +1428,8 @@
         
         // Add click handlers to day/night toggle switches to ensure they work
         document.addEventListener('DOMContentLoaded', function() {
-            // Day toggle switch
-            const dayToggleSwitch = document.querySelector('.control-panel .toggle-switch');
+            // Day toggle switch (now in legend panel)
+            const dayToggleSwitch = document.querySelector('#legendContent .toggle-switch');
             const dayCheckbox = document.getElementById('dayToggle');
             if (dayToggleSwitch && dayCheckbox) {
                 dayToggleSwitch.addEventListener('click', function(e) {
@@ -828,8 +1440,8 @@
                 });
             }
             
-            // Night toggle switch
-            const nightToggleSwitch = document.querySelectorAll('.control-panel .toggle-switch')[1];
+            // Night toggle switch (now in legend panel)
+            const nightToggleSwitch = document.querySelectorAll('#legendContent .toggle-switch')[1];
             const nightCheckbox = document.getElementById('nightToggle');
             if (nightToggleSwitch && nightCheckbox) {
                 nightToggleSwitch.addEventListener('click', function(e) {
