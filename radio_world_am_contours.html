@@ -210,6 +210,32 @@
             border-radius: 8px;
             font-size: 13px;
             border: 1px solid rgba(76, 175, 80, 0.2);
+            position: relative;
+        }
+        
+        .search-results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .search-results-toggle {
+            background: none;
+            border: none;
+            color: #4CAF50;
+            font-size: 16px;
+            cursor: pointer;
+            padding: 0;
+        }
+        
+        .search-results-content {
+            transition: all 0.3s ease;
+        }
+        
+        .search-results-content.collapsed {
+            display: none;
         }
         
         .contour-toggles {
@@ -345,9 +371,15 @@
             }
             
             .search-results {
-                padding: 10px;
-                font-size: 12px;
-                margin-top: 8px;
+                padding: 8px;
+                font-size: 11px;
+                margin-top: 6px;
+                max-height: 40vh;
+                overflow-y: auto;
+            }
+            
+            .search-results-header {
+                margin-bottom: 6px;
             }
             
             /* Smaller toggles on mobile */
@@ -1187,7 +1219,30 @@
                     </div>
                 `;
                 
-                document.getElementById('searchResults').innerHTML = resultsHTML;
+                // Wrap the results in collapsible structure
+                const wrappedHTML = `
+                    <div class="search-results-header" onclick="toggleSearchResults()">
+                        <strong>${callsign} Results</strong>
+                        <button class="search-results-toggle" id="searchToggleBtn">−</button>
+                    </div>
+                    <div class="search-results-content" id="searchResultsContent">
+                        ${resultsHTML}
+                    </div>
+                `;
+                
+                document.getElementById('searchResults').innerHTML = wrappedHTML;
+                
+                // Auto-collapse on mobile after 3 seconds to free up screen space
+                if (window.innerWidth <= 768) {
+                    setTimeout(() => {
+                        const content = document.getElementById('searchResultsContent');
+                        const button = document.getElementById('searchToggleBtn');
+                        if (content && button) {
+                            content.classList.add('collapsed');
+                            button.textContent = '+';
+                        }
+                    }, 3000);
+                }
                 
                 // Add station marker immediately upon search
                 if (stationInfo.lat && stationInfo.lon) {
@@ -1386,6 +1441,20 @@
             Object.values(searchContourGroups).forEach(group => group.clearLayers());
             document.getElementById('searchResults').innerHTML = '';
             document.getElementById('callsignSearch').value = '';
+        }
+        
+        // Toggle search results visibility
+        function toggleSearchResults() {
+            const content = document.getElementById('searchResultsContent');
+            const button = document.getElementById('searchToggleBtn');
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                button.textContent = '−';
+            } else {
+                content.classList.add('collapsed');
+                button.textContent = '+';
+            }
         }
         
         // Toggle day/night views
