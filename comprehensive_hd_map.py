@@ -141,42 +141,42 @@ nielsen_colors = {
     'Unknown': '#D3D3D3'         # Light gray
 }
 
-# Create feature groups with marker clustering for each station class
+# Create a single master MarkerCluster for all stations (prevents overlapping cluster issues)
+all_stations_cluster = plugins.MarkerCluster(
+    name='All HD Stations',
+    show=True,
+    options={
+        'spiderfyOnMaxZoom': True,
+        'showCoverageOnHover': False,
+        'zoomToBoundsOnClick': True,
+        'maxClusterRadius': 40,
+        'spiderfyDistanceMultiplier': 2,
+        'spiderLegPolylineOptions': {'weight': 1.5, 'color': '#222', 'opacity': 0.5},
+        'disableClusteringAtZoom': 11,  # Uncluster automatically at city level zoom
+        'chunkedLoading': True,  # Load markers in chunks for better performance
+        'chunkInterval': 200,  # ms between loading chunks
+        'chunkDelay': 50  # ms delay before starting chunk loading
+    }
+)
+
+# Create simple feature groups for filtering by class (no clustering per group)
 class_groups = {}
 major_classes = ['A', 'B', 'B1', 'C', 'C0', 'C1', 'C2', 'C3', 'D', 'LP100', 'LP10']
 
 for cls in major_classes:
     if cls in class_counts.index:
-        # Use MarkerCluster for each class to handle co-located stations
-        class_groups[cls] = plugins.MarkerCluster(
+        class_groups[cls] = folium.FeatureGroup(
             name=f'Class {cls} ({class_counts[cls]:,} stations)',
-            show=True,  # All visible by default
-            options={
-                'spiderfyOnMaxZoom': True,
-                'showCoverageOnHover': False,
-                'zoomToBoundsOnClick': True,
-                'maxClusterRadius': 40,  # Stations within 40px will cluster
-                'spiderfyDistanceMultiplier': 2,  # Spread markers further apart
-                'spiderLegPolylineOptions': {'weight': 1.5, 'color': '#222', 'opacity': 0.5}
-            }
+            show=False  # Hidden by default to avoid clutter with main cluster
         )
 
-# Create feature groups with marker clustering for Nielsen market tiers
+# Create simple feature groups for Nielsen market tiers (no clustering per group)
 nielsen_groups = {}
 for tier in nielsen_colors.keys():
     if tier in nielsen_counts.index:
-        # Use MarkerCluster for Nielsen tiers as well
-        nielsen_groups[tier] = plugins.MarkerCluster(
+        nielsen_groups[tier] = folium.FeatureGroup(
             name=f'Nielsen: {tier} ({nielsen_counts[tier]:,})',
-            show=False,  # Start hidden, can be toggled
-            options={
-                'spiderfyOnMaxZoom': True,
-                'showCoverageOnHover': False,
-                'zoomToBoundsOnClick': True,
-                'maxClusterRadius': 40,
-                'spiderfyDistanceMultiplier': 2,
-                'spiderLegPolylineOptions': {'weight': 1.5, 'color': '#222', 'opacity': 0.5}
-            }
+            show=False
         )
 
 print("Adding station markers by class and Nielsen tier...")
@@ -256,7 +256,19 @@ for idx, station in mappable_hd.iterrows():
     else:  # D, LP100, LP10
         radius = 3
 
-    # Add to class group
+    # Add to main cluster (all stations)
+    folium.CircleMarker(
+        location=[lat, lon],
+        radius=radius,
+        popup=folium.Popup(popup_text, max_width=300),
+        tooltip=tooltip_text,
+        color='white',
+        weight=1,
+        fillColor=class_color,
+        fillOpacity=0.8
+    ).add_to(all_stations_cluster)
+
+    # Add to class group (for filtering)
     if station_class in class_groups:
         folium.CircleMarker(
             location=[lat, lon],
@@ -269,7 +281,7 @@ for idx, station in mappable_hd.iterrows():
             fillOpacity=0.8
         ).add_to(class_groups[station_class])
 
-    # Add to Nielsen group
+    # Add to Nielsen group (for filtering)
     if nielsen_tier in nielsen_groups:
         folium.CircleMarker(
             location=[lat, lon],
@@ -282,7 +294,10 @@ for idx, station in mappable_hd.iterrows():
             fillOpacity=0.8
         ).add_to(nielsen_groups[nielsen_tier])
 
-# Add all groups to map
+# Add main cluster first
+all_stations_cluster.add_to(m)
+
+# Add all filter groups to map
 for group in class_groups.values():
     group.add_to(m)
 
