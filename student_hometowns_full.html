@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d5e78dc257f0151f21c74c6a3a1aab09 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+<div style="position: fixed; bottom: 30px; left: 30px; z-index: 1000;
+     background: white; padding: 12px 16px; border-radius: 8px;
+     box-shadow: 0 2px 8px rgba(0,0,0,0.2); font-family: 'Segoe UI', sans-serif;
+     font-size: 13px; line-height: 1.8;">
+<b style="font-size: 14px;">CSC 2053 — Student Hometowns</b><br>
+<span style="color:#e74c3c;">&#9679;</span> NJ (4)<br><span style="color:#3498db;">&#9679;</span> PA (4)<br><span style="color:#2ecc71;">&#9679;</span> CT (2)<br><span style="color:#f39c12;">&#9679;</span> NY (2)<br><span style="color:#9b59b6;">&#9679;</span> MD (1)<br><span style="color:#1abc9c;">&#9679;</span> IL (1)<br><span style="color:#e67e22;">&#9679;</span> CA (1)<br><span style="color:#e91e63;">&#9679;</span> Vietnam (1)<br><span style="color:#666; font-size:11px;">16 students total</span></div>
+    
+            <div class="folium-map" id="map_d5e78dc257f0151f21c74c6a3a1aab09" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_d5e78dc257f0151f21c74c6a3a1aab09 = L.map(
+                "map_d5e78dc257f0151f21c74c6a3a1aab09",
+                {
+                    center: [35.0, -40.0],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 3,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_d89924b6bf8b6ceef84b9b037dbe8c08 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_d89924b6bf8b6ceef84b9b037dbe8c08.addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+            var circle_marker_980584d1267de5e959754aa37cbb7c40 = L.circleMarker(
+                [39.2612, -75.2271],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_cc066483322b09bd5d3b0459da24b463 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_c5c2c380c079ce165efa95ae90ba588f = $(`<div id="html_c5c2c380c079ce165efa95ae90ba588f" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Downe Township</b><br>         <span style="color: #666;">Cumberland County, NJ</span><br>         <span style="color: #999; font-size: 12px;">@ACooper08</span>     </div>     </div>`)[0];
+                popup_cc066483322b09bd5d3b0459da24b463.setContent(html_c5c2c380c079ce165efa95ae90ba588f);
+            
+        
+
+        circle_marker_980584d1267de5e959754aa37cbb7c40.bindPopup(popup_cc066483322b09bd5d3b0459da24b463)
+        ;
+
+        
+    
+    
+            circle_marker_980584d1267de5e959754aa37cbb7c40.bindTooltip(
+                `<div>
+                     Downe Township — @ACooper08
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5673d29cb6281c6b049070bca548bfdd = L.circleMarker(
+                [41.0887, -74.1438],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_5aa5c9d1614ba00c5bbe48480d3f8db0 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_2c3f02def0639d72ff5fa819766029b2 = $(`<div id="html_2c3f02def0639d72ff5fa819766029b2" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Mahwah</b><br>         <span style="color: #666;">Bergen County, NJ</span><br>         <span style="color: #999; font-size: 12px;">@adellavv</span>     </div>     </div>`)[0];
+                popup_5aa5c9d1614ba00c5bbe48480d3f8db0.setContent(html_2c3f02def0639d72ff5fa819766029b2);
+            
+        
+
+        circle_marker_5673d29cb6281c6b049070bca548bfdd.bindPopup(popup_5aa5c9d1614ba00c5bbe48480d3f8db0)
+        ;
+
+        
+    
+    
+            circle_marker_5673d29cb6281c6b049070bca548bfdd.bindTooltip(
+                `<div>
+                     Mahwah — @adellavv
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_09b2a94062ceab1b0ac1851941972084 = L.circleMarker(
+                [40.1857, -75.4513],
+                {"bubblingMouseEvents": true, "color": "#3498db", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3498db", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_0caffb792a905e9974f789c0880bf4e9 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_fa997cb9a7a6c5b6a273582e5cc98ef1 = $(`<div id="html_fa997cb9a7a6c5b6a273582e5cc98ef1" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Collegeville</b><br>         <span style="color: #666;">Montgomery County, PA</span><br>         <span style="color: #999; font-size: 12px;">@AlanQ03</span>     </div>     </div>`)[0];
+                popup_0caffb792a905e9974f789c0880bf4e9.setContent(html_fa997cb9a7a6c5b6a273582e5cc98ef1);
+            
+        
+
+        circle_marker_09b2a94062ceab1b0ac1851941972084.bindPopup(popup_0caffb792a905e9974f789c0880bf4e9)
+        ;
+
+        
+    
+    
+            circle_marker_09b2a94062ceab1b0ac1851941972084.bindTooltip(
+                `<div>
+                     Collegeville — @AlanQ03
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ffcc323f75c3a0d956731ddd0c107b33 = L.circleMarker(
+                [41.1837, -75.4224],
+                {"bubblingMouseEvents": true, "color": "#3498db", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3498db", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_5f11c80ac318106c41e64980f1cb6d24 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_73ca6fb6fe4e604e97896e92065c4a9b = $(`<div id="html_73ca6fb6fe4e604e97896e92065c4a9b" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Tobyhanna</b><br>         <span style="color: #666;">Monroe County, PA</span><br>         <span style="color: #999; font-size: 12px;">@cmui4</span>     </div>     </div>`)[0];
+                popup_5f11c80ac318106c41e64980f1cb6d24.setContent(html_73ca6fb6fe4e604e97896e92065c4a9b);
+            
+        
+
+        circle_marker_ffcc323f75c3a0d956731ddd0c107b33.bindPopup(popup_5f11c80ac318106c41e64980f1cb6d24)
+        ;
+
+        
+    
+    
+            circle_marker_ffcc323f75c3a0d956731ddd0c107b33.bindTooltip(
+                `<div>
+                     Tobyhanna — @cmui4
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5f4dbe8fe48b0ceea180742e64197d94 = L.circleMarker(
+                [37.8349, -122.1297],
+                {"bubblingMouseEvents": true, "color": "#e67e22", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e67e22", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_c546fc85de199b4a69e24020a41ed820 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_2f48e2fd8bea357dd022e9603d54a67d = $(`<div id="html_2f48e2fd8bea357dd022e9603d54a67d" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Moraga</b><br>         <span style="color: #666;">Contra Costa County, CA</span><br>         <span style="color: #999; font-size: 12px;">@ecampb19</span>     </div>     </div>`)[0];
+                popup_c546fc85de199b4a69e24020a41ed820.setContent(html_2f48e2fd8bea357dd022e9603d54a67d);
+            
+        
+
+        circle_marker_5f4dbe8fe48b0ceea180742e64197d94.bindPopup(popup_c546fc85de199b4a69e24020a41ed820)
+        ;
+
+        
+    
+    
+            circle_marker_5f4dbe8fe48b0ceea180742e64197d94.bindTooltip(
+                `<div>
+                     Moraga — @ecampb19
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f609ce7513fd11aedb9b39ab0c7d8c86 = L.circleMarker(
+                [40.1862, -75.0268],
+                {"bubblingMouseEvents": true, "color": "#3498db", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3498db", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_3b9397fe2f6533038c405eff987fec8b = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_8f6eeb4473b3bcfc4837706675c36b32 = $(`<div id="html_8f6eeb4473b3bcfc4837706675c36b32" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Churchville</b><br>         <span style="color: #666;">Bucks County, PA</span><br>         <span style="color: #999; font-size: 12px;">@erinmcfadden3</span>     </div>     </div>`)[0];
+                popup_3b9397fe2f6533038c405eff987fec8b.setContent(html_8f6eeb4473b3bcfc4837706675c36b32);
+            
+        
+
+        circle_marker_f609ce7513fd11aedb9b39ab0c7d8c86.bindPopup(popup_3b9397fe2f6533038c405eff987fec8b)
+        ;
+
+        
+    
+    
+            circle_marker_f609ce7513fd11aedb9b39ab0c7d8c86.bindTooltip(
+                `<div>
+                     Churchville — @erinmcfadden3
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_a6c8e4df2a4b21c945615eb8e25d351e = L.circleMarker(
+                [38.981, -77.0839],
+                {"bubblingMouseEvents": true, "color": "#9b59b6", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#9b59b6", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_e49bf94022474fb7f0cfc82e40895545 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_609c976d482f86bd0c65ef96dfac8b19 = $(`<div id="html_609c976d482f86bd0c65ef96dfac8b19" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Chevy Chase</b><br>         <span style="color: #666;">Montgomery County, MD</span><br>         <span style="color: #999; font-size: 12px;">@hstipe05</span>     </div>     </div>`)[0];
+                popup_e49bf94022474fb7f0cfc82e40895545.setContent(html_609c976d482f86bd0c65ef96dfac8b19);
+            
+        
+
+        circle_marker_a6c8e4df2a4b21c945615eb8e25d351e.bindPopup(popup_e49bf94022474fb7f0cfc82e40895545)
+        ;
+
+        
+    
+    
+            circle_marker_a6c8e4df2a4b21c945615eb8e25d351e.bindTooltip(
+                `<div>
+                     Chevy Chase — @hstipe05
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_11fb7f6987921d63140c094ec56dc193 = L.circleMarker(
+                [16.4637, 107.5909],
+                {"bubblingMouseEvents": true, "color": "#e91e63", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e91e63", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_4cee612536face232c8d7b28bad766d5 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_530cfa906d6b02e6c445ef41fba709d3 = $(`<div id="html_530cfa906d6b02e6c445ef41fba709d3" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Hue</b><br>         <span style="color: #666;">Vietnam</span><br>         <span style="color: #999; font-size: 12px;">@jamesvo2103</span>     </div>     </div>`)[0];
+                popup_4cee612536face232c8d7b28bad766d5.setContent(html_530cfa906d6b02e6c445ef41fba709d3);
+            
+        
+
+        circle_marker_11fb7f6987921d63140c094ec56dc193.bindPopup(popup_4cee612536face232c8d7b28bad766d5)
+        ;
+
+        
+    
+    
+            circle_marker_11fb7f6987921d63140c094ec56dc193.bindTooltip(
+                `<div>
+                     Hue — @jamesvo2103
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_cbe1ff13a54f3a9fd23149742e12c7b5 = L.circleMarker(
+                [41.627, -88.2037],
+                {"bubblingMouseEvents": true, "color": "#1abc9c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#1abc9c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_3c7f78489785f9ac1e6b975060922610 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_697650248631113f00844bcffd0d8faa = $(`<div id="html_697650248631113f00844bcffd0d8faa" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Plainfield</b><br>         <span style="color: #666;">Will County, IL</span><br>         <span style="color: #999; font-size: 12px;">@jbehring45</span>     </div>     </div>`)[0];
+                popup_3c7f78489785f9ac1e6b975060922610.setContent(html_697650248631113f00844bcffd0d8faa);
+            
+        
+
+        circle_marker_cbe1ff13a54f3a9fd23149742e12c7b5.bindPopup(popup_3c7f78489785f9ac1e6b975060922610)
+        ;
+
+        
+    
+    
+            circle_marker_cbe1ff13a54f3a9fd23149742e12c7b5.bindTooltip(
+                `<div>
+                     Plainfield — @jbehring45
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_32e018a937a72f3c3aa1962aad41ff91 = L.circleMarker(
+                [40.8223, -74.1599],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_03c5db28ceb43ae03d63981873de8168 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_ecee21d1d9f039fd9bbd7bbf71534803 = $(`<div id="html_ecee21d1d9f039fd9bbd7bbf71534803" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Nutley</b><br>         <span style="color: #666;">Essex County, NJ</span><br>         <span style="color: #999; font-size: 12px;">@jbelleng</span>     </div>     </div>`)[0];
+                popup_03c5db28ceb43ae03d63981873de8168.setContent(html_ecee21d1d9f039fd9bbd7bbf71534803);
+            
+        
+
+        circle_marker_32e018a937a72f3c3aa1962aad41ff91.bindPopup(popup_03c5db28ceb43ae03d63981873de8168)
+        ;
+
+        
+    
+    
+            circle_marker_32e018a937a72f3c3aa1962aad41ff91.bindTooltip(
+                `<div>
+                     Nutley — @jbelleng
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7f94921f90e8779f33c367bb39cf10dd = L.circleMarker(
+                [40.1543, -75.2216],
+                {"bubblingMouseEvents": true, "color": "#3498db", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#3498db", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_966c161871d3602b4c75883c163e96da = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_85a6278cc7bfcb48f854d6f071d3ddb6 = $(`<div id="html_85a6278cc7bfcb48f854d6f071d3ddb6" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Ambler</b><br>         <span style="color: #666;">Montgomery County, PA</span><br>         <span style="color: #999; font-size: 12px;">@johnahn35</span>     </div>     </div>`)[0];
+                popup_966c161871d3602b4c75883c163e96da.setContent(html_85a6278cc7bfcb48f854d6f071d3ddb6);
+            
+        
+
+        circle_marker_7f94921f90e8779f33c367bb39cf10dd.bindPopup(popup_966c161871d3602b4c75883c163e96da)
+        ;
+
+        
+    
+    
+            circle_marker_7f94921f90e8779f33c367bb39cf10dd.bindTooltip(
+                `<div>
+                     Ambler — @johnahn35
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_279e0e221a815c266dd12286252bcb23 = L.circleMarker(
+                [41.3334, -73.7651],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_769b7b77fccd315bf4f6deb2ab0616af = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f5c5a126a03b2fa66ea4a80c160b106c = $(`<div id="html_f5c5a126a03b2fa66ea4a80c160b106c" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">North Salem</b><br>         <span style="color: #666;">Westchester County, NY</span><br>         <span style="color: #999; font-size: 12px;">@lvalletta28</span>     </div>     </div>`)[0];
+                popup_769b7b77fccd315bf4f6deb2ab0616af.setContent(html_f5c5a126a03b2fa66ea4a80c160b106c);
+            
+        
+
+        circle_marker_279e0e221a815c266dd12286252bcb23.bindPopup(popup_769b7b77fccd315bf4f6deb2ab0616af)
+        ;
+
+        
+    
+    
+            circle_marker_279e0e221a815c266dd12286252bcb23.bindTooltip(
+                `<div>
+                     North Salem — @lvalletta28
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5819c530f28125481ba365172903fb2d = L.circleMarker(
+                [40.0684, -74.8427],
+                {"bubblingMouseEvents": true, "color": "#e74c3c", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#e74c3c", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_e33d30e32b2910b788a2dee1a3e58902 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_377aa6978078627157c060c26051c0b8 = $(`<div id="html_377aa6978078627157c060c26051c0b8" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Columbus</b><br>         <span style="color: #666;">Burlington County, NJ</span><br>         <span style="color: #999; font-size: 12px;">@ntaylor0725</span>     </div>     </div>`)[0];
+                popup_e33d30e32b2910b788a2dee1a3e58902.setContent(html_377aa6978078627157c060c26051c0b8);
+            
+        
+
+        circle_marker_5819c530f28125481ba365172903fb2d.bindPopup(popup_e33d30e32b2910b788a2dee1a3e58902)
+        ;
+
+        
+    
+    
+            circle_marker_5819c530f28125481ba365172903fb2d.bindTooltip(
+                `<div>
+                     Columbus — @ntaylor0725
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_7e75e33828c4b3d3e74b372d4c1bc6f1 = L.circleMarker(
+                [41.1177, -73.4082],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_22637b95e40beeead39da1814c5df778 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_f75b01179f7938db1f560a61326661e2 = $(`<div id="html_f75b01179f7938db1f560a61326661e2" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Norwalk</b><br>         <span style="color: #666;">Fairfield County, CT</span><br>         <span style="color: #999; font-size: 12px;">@pinesurf</span>     </div>     </div>`)[0];
+                popup_22637b95e40beeead39da1814c5df778.setContent(html_f75b01179f7938db1f560a61326661e2);
+            
+        
+
+        circle_marker_7e75e33828c4b3d3e74b372d4c1bc6f1.bindPopup(popup_22637b95e40beeead39da1814c5df778)
+        ;
+
+        
+    
+    
+            circle_marker_7e75e33828c4b3d3e74b372d4c1bc6f1.bindTooltip(
+                `<div>
+                     Norwalk — @pinesurf
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_ce0c337ab923392559273c9f2d23ffec = L.circleMarker(
+                [41.0534, -73.5387],
+                {"bubblingMouseEvents": true, "color": "#2ecc71", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2ecc71", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_f6f75f9336a8c94dfcb4ddf58ba735e1 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_37c548cdf7d1df2b63826950f7528aa3 = $(`<div id="html_37c548cdf7d1df2b63826950f7528aa3" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Stamford</b><br>         <span style="color: #666;">Fairfield County, CT</span><br>         <span style="color: #999; font-size: 12px;">@Shez-0</span>     </div>     </div>`)[0];
+                popup_f6f75f9336a8c94dfcb4ddf58ba735e1.setContent(html_37c548cdf7d1df2b63826950f7528aa3);
+            
+        
+
+        circle_marker_ce0c337ab923392559273c9f2d23ffec.bindPopup(popup_f6f75f9336a8c94dfcb4ddf58ba735e1)
+        ;
+
+        
+    
+    
+            circle_marker_ce0c337ab923392559273c9f2d23ffec.bindTooltip(
+                `<div>
+                     Stamford — @Shez-0
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_113a03daf4e8f3473471fc1c1b9d5e2d = L.circleMarker(
+                [40.6548, -73.6718],
+                {"bubblingMouseEvents": true, "color": "#f39c12", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#f39c12", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 3}
+            ).addTo(map_d5e78dc257f0151f21c74c6a3a1aab09);
+        
+    
+        var popup_caf21cff1a1c49b5dc5b3d1ebc6537d2 = L.popup({
+  "maxWidth": 250,
+});
+
+        
+            
+                var html_57e02aec127d0d469dd20e7a1bc4d4c1 = $(`<div id="html_57e02aec127d0d469dd20e7a1bc4d4c1" style="width: 100.0%; height: 100.0%;">     <div style="font-family: 'Segoe UI', sans-serif; min-width: 160px;">         <b style="font-size: 14px;">Lynbrook</b><br>         <span style="color: #666;">Nassau County, NY</span><br>         <span style="color: #999; font-size: 12px;">@ZacharyBuxton</span>     </div>     </div>`)[0];
+                popup_caf21cff1a1c49b5dc5b3d1ebc6537d2.setContent(html_57e02aec127d0d469dd20e7a1bc4d4c1);
+            
+        
+
+        circle_marker_113a03daf4e8f3473471fc1c1b9d5e2d.bindPopup(popup_caf21cff1a1c49b5dc5b3d1ebc6537d2)
+        ;
+
+        
+    
+    
+            circle_marker_113a03daf4e8f3473471fc1c1b9d5e2d.bindTooltip(
+                `<div>
+                     Lynbrook — @ZacharyBuxton
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>
