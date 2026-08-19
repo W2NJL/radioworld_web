@@ -1,0 +1,15 @@
+{
+  "total_messages": 126049,
+  "channels": [
+    "e-skip",
+    "au",
+    "tropo",
+    "dx-rewind",
+    "meteorscatter"
+  ],
+  "date_range": {
+    "earliest": "2018-05-15T18:56:44.000029",
+    "latest": "2026-08-18T19:41:47.283279"
+  },
+  "generated_at": "2026-08-19T01:04:47.844872"
+}
