@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>U.S. Class A AM Stations — the 73 Clear-Channel Signals</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="">
+<style>
+  :root { --ink:#1a1a1a; --muted:#555; --bg:#faf7f2; --accent:#8c2a1e; }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .wrap{max-width:1200px;margin:0 auto;padding:14px 18px 24px;}
+  h1{font-size:1.4rem;margin:0 0 4px;font-weight:700;letter-spacing:-0.01em;}
+  .sub{color:var(--muted);font-size:0.86rem;margin:0 0 12px;line-height:1.4;}
+  .sub a{color:var(--accent);text-decoration:underline;text-decoration-color:#d4bca5;
+         text-underline-offset:2px;}
+  .sub a:hover{text-decoration-color:var(--accent);}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px;}
+  .controls label{font-size:0.82rem;color:var(--muted);}
+  input[type=search]{font:inherit;padding:5px 8px;border:1px solid #d4cfc5;border-radius:4px;
+         background:#fff;color:var(--ink);min-width:220px;}
+  #map{height:620px;width:100%;border-radius:6px;background:#dfe8ef;
+       box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  .cred{font-size:0.76rem;color:var(--muted);margin-top:10px;}
+  .list{margin-top:18px;padding-top:12px;border-top:1px solid #d4cfc5;}
+  .list h2{font-size:1rem;font-weight:600;margin:0 0 8px;color:var(--ink);}
+  .list .cnt{font-size:0.78rem;color:var(--muted);font-weight:400;margin-left:6px;}
+  .list-scroll{max-height:520px;overflow-y:auto;border:1px solid #d4cfc5;border-radius:4px;}
+  table.sta{width:100%;border-collapse:collapse;font-size:0.84rem;}
+  table.sta th{text-align:left;padding:6px 10px;color:var(--muted);
+         border-bottom:1px solid #d4cfc5;font-weight:500;position:sticky;top:0;
+         background:var(--bg);cursor:pointer;user-select:none;}
+  table.sta th.sorted-asc:after  { content:' \25B2'; font-size:.65em; color:var(--accent); }
+  table.sta th.sorted-desc:after { content:' \25BC'; font-size:.65em; color:var(--accent); }
+  table.sta td{padding:4px 10px;border-bottom:1px solid #eee6d7;vertical-align:top;}
+  table.sta tr:hover td{background:#f1ece3;}
+  table.sta td.call{font-weight:700;color:var(--accent);}
+  table.sta td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  table.sta td.muted{color:var(--muted);font-size:.78rem;}
+  .dir{display:inline-block;font-size:.65rem;font-weight:600;padding:1px 4px;
+       border-radius:3px;margin-left:4px;color:#fff;vertical-align:middle;}
+  .dir.ND{background:#4a7a4a;}
+  .dir.DA{background:#b0792a;}
+  .leaflet-tooltip.sta{background:#1a1a1a;color:#fff;border:none;
+         font-size:0.78rem;padding:6px 9px;border-radius:4px;max-width:260px;
+         line-height:1.3;}
+  .leaflet-tooltip.sta:before{display:none;}
+  .leaflet-tooltip.sta b{color:#f5a742;}
+  .leaflet-tooltip.sta .freq{color:#f5a742;font-weight:700;}
+  .leaflet-tooltip.sta .ow{color:#bbb;font-size:.70rem;margin-top:3px;display:block;}
+  .leaflet-tooltip.sta .pw{color:#eee;font-size:.72rem;margin-top:2px;display:block;}
+  .leaflet-tooltip.sta .fm{color:#9ad;font-size:.72rem;font-style:italic;}
+  @media (max-width:620px){
+    #map{height:460px;}
+    h1{font-size:1.15rem;}
+    .sub{font-size:0.80rem;}
+    table.sta{font-size:0.78rem;}
+    table.sta td,table.sta th{padding:3px 6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>U.S. Class A AM stations — the 73 clear-channel signals</h1>
+  <p class="sub">Every full-power Class A AM station currently licensed in the FCC
+     database — the modern descendants of the <a href="https://en.wikipedia.org/wiki/North_American_Regional_Broadcasting_Agreement"
+     target="_blank" rel="noopener">1941 Havana Treaty</a> clear-channel tier.
+     Each dot marks the licensed transmitter site. Hover any marker for
+     call letters, city of license, frequency, day/night power, format, slogan
+     and owner. Sort the roster below by clicking any column header.</p>
+
+  <div class="controls">
+    <label for="q">Filter:</label>
+    <input id="q" type="search" placeholder="callsign, city, state, owner…">
+    <span id="count" style="font-size:.78rem;color:var(--muted);"></span>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="list">
+    <h2>Class A AM roster <span class="cnt">(73 stations)</span></h2>
+    <div class="list-scroll">
+      <table class="sta" id="roster">
+        <thead><tr>
+          <th data-k="c">Call</th>
+          <th data-k="f" class="num">Freq</th>
+          <th data-k="ct">City</th>
+          <th data-k="st">St</th>
+          <th data-k="dp" class="num">Day</th>
+          <th data-k="np" class="num">Night</th>
+          <th data-k="fm">Format</th>
+          <th data-k="sl">Slogan</th>
+          <th data-k="ow">Owner</th>
+        </tr></thead>
+        <tbody id="rosterBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cred">Data: FCC LMS via RadioLand database · Map: Nick Langan for Radio World</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script>
+const STATIONS = [{"c":"KFI","ct":"Los Angeles","st":"CA","f":640,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Talk","sl":"KFI AM 640","ow":"IHM LICENSES, LLC","la":33.8797,"lo":-118.0139},{"c":"KYUK","ct":"Bethel","st":"AK","f":640,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"News/Variety","sl":"","ow":"BETHEL BROADCASTING, INC.","la":60.7818,"lo":-161.8856},{"c":"KENI","ct":"Anchorage","st":"AK","f":650,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NewsRadio 650","ow":"IHM LICENSES, LLC","la":61.1656,"lo":-149.8283},{"c":"WSM","ct":"Nashville","st":"TN","f":650,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Country","sl":"WSM Radio","ow":"WSM-AM, LLC","la":35.9973,"lo":-86.7922},{"c":"KFAR","ct":"Fairbanks","st":"AK","f":660,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"HEARTBEAT OF ALASKA 97.5FM AND 660AM","ow":"ROB INGSTAD LICENSES, LLC","la":64.8076,"lo":-147.4952},{"c":"WFAN","ct":"New York","st":"NY","f":660,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Sports","sl":"Sports Radio 66 AM and 101.9 FM","ow":"Audacy License, LLC","la":40.8598,"lo":-73.7854},{"c":"KDLG","ct":"Dillingham","st":"AK","f":670,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"Variety","sl":"KDLG","ow":"DILLINGHAM CITY SCHOOL DISTRICT","la":59.0445,"lo":-158.4541},{"c":"WSCR","ct":"Chicago","st":"IL","f":670,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Sports","sl":"670 The Score","ow":"Audacy License, LLC","la":42.0421,"lo":-87.8672},{"c":"KBRW","ct":"Barrow","st":"AK","f":680,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"Variety/News/Talk","sl":"TOP OF THE WORLD RADIO","ow":"SILAKKUAGVIK COMMUNICATIONS, INC.","la":71.2562,"lo":-156.529},{"c":"KNBR","ct":"San Francisco","st":"CA","f":680,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Sports","sl":"KNBR 680 104.5 THE SPORTS LEADER","ow":"Radio License Holding SRC LLC","la":37.5472,"lo":-122.2344},{"c":"KBYR","ct":"Anchorage","st":"AK","f":700,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"Talk","sl":"ALASKA TALKS HERE, 700 AM","ow":"OMG FCC LICENSES LLC","la":61.2064,"lo":-149.9244},{"c":"WLW","ct":"Cincinnati","st":"OH","f":700,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Talk","sl":"Newsradio 700 WLW","ow":"IHM LICENSES, LLC","la":39.3531,"lo":-84.3249},{"c":"KIRO","ct":"Seattle","st":"WA","f":710,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"Sports","sl":"''Seattle Sports''","ow":"BONNEVILLE INTERNATIONAL CORPORATION","la":47.3984,"lo":-122.4349},{"c":"WOR","ct":"New York","st":"NY","f":710,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"News","sl":"710 WOR","ow":"IHM LICENSES, LLC","la":40.7918,"lo":-74.0935},{"c":"KOTZ","ct":"Kotzebue","st":"AK","f":720,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"Variety","sl":"KOTZ","ow":"KOTZEBUE BROADCASTING, INC.","la":66.8388,"lo":-162.5709},{"c":"WGN","ct":"Chicago","st":"IL","f":720,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Talk","sl":"720 WGN","ow":"TRIBUNE MEDIA COMPANY","la":42.0117,"lo":-88.0353},{"c":"KFQD","ct":"Anchorage","st":"AK","f":750,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NEWS TALK 103.7 FM AND 750 AM","ow":"Alpha Media Licensee LLC","la":61.1364,"lo":-149.8372},{"c":"WSB","ct":"Atlanta","st":"GA","f":750,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"95-5 WSB/Atlanta's News and Talk","ow":"Cox Radio, LLC","la":33.844,"lo":-84.2532},{"c":"WJR","ct":"Detroit","st":"MI","f":760,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"News Talk 760 WJR","ow":"RADIO LICENSE HOLDINGS LLC","la":42.1681,"lo":-83.2149},{"c":"KCHU","ct":"Valdez","st":"AK","f":770,"dp":"9.7 kW","np":"9.7 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"KCHU","ow":"TERMINAL RADIO, INC.","la":61.1106,"lo":-146.2629},{"c":"WABC","ct":"New York","st":"NY","f":770,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NEWS TALK RADIO 77 WABC","ow":"RED APPLE MEDIA, INC.","la":40.8807,"lo":-74.0696},{"c":"KNOM","ct":"Nome","st":"AK","f":780,"dp":"25 kW","np":"14 kW","dd":"N","nd":"N","fm":"News","sl":"KNOM and KNOM-FM","ow":"KNOM RADIO MISSION, INC.","la":64.487,"lo":-165.3021},{"c":"WBBM","ct":"Chicago","st":"IL","f":780,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"WBBM NEWSRADIO 780 & 105.9","ow":"Audacy License, LLC","la":41.9922,"lo":-88.0267},{"c":"KSFO","ct":"San Francisco","st":"CA","f":810,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"Talk","sl":"810 KSFO","ow":"RADIO LICENSE HOLDINGS LLC","la":37.5263,"lo":-122.1016},{"c":"WGY","ct":"Schenectady","st":"NY","f":810,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Talk","sl":"News Radio 103.1 and 810 WGY","ow":"IHM LICENSES, LLC","la":42.7937,"lo":-74.0096},{"c":"KCBF","ct":"Fairbanks","st":"AK","f":820,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"Sports","sl":"ESPN RADIO FAIRBANKS 820 AM AND 107.9 FM","ow":"TOR INGSTAD LICENSES, LLC","la":64.8785,"lo":-147.6707},{"c":"WBAP","ct":"Fort Worth","st":"TX","f":820,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"News/Talk 820 WBAP and on FM 93.3","ow":"Cumulus Licensing Holding Company LLC","la":32.6107,"lo":-97.1669},{"c":"WCCO","ct":"Minneapolis","st":"MN","f":830,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"","ow":"Audacy License, LLC","la":45.1777,"lo":-93.3488},{"c":"WHAS","ct":"Louisville","st":"KY","f":840,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"Newsradio 840 WHAS","ow":"IHM LICENSES, LLC","la":38.2612,"lo":-85.4286},{"c":"KICY","ct":"Nome","st":"AK","f":850,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"Southern Gospel","sl":"AM 850","ow":"ARCTIC BROADCASTING ASSOCIATION","la":64.4898,"lo":-165.3226},{"c":"KOA","ct":"Denver","st":"CO","f":850,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"KOA 850 AM & 94.1 FM","ow":"IHM LICENSES, LLC","la":39.5061,"lo":-104.7664},{"c":"WWL","ct":"New Orleans","st":"LA","f":870,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"News","sl":"The Big 870","ow":"Audacy License, LLC","la":29.8374,"lo":-90.132},{"c":"WHSQ","ct":"New York","st":"NY","f":880,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Sports","sl":"ESPN New York 880 AM/Mets Radio 880 AM (alternate)","ow":"Audacy License, LLC","la":40.8598,"lo":-73.7854},{"c":"KBBI","ct":"Homer","st":"AK","f":890,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"News","sl":"","ow":"KACHEMAK BAY BROADCASTING INC","la":59.6699,"lo":-151.446},{"c":"WLS","ct":"Chicago","st":"IL","f":890,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Talk","sl":"890 WLS","ow":"RADIO LICENSE HOLDINGS LLC","la":41.5559,"lo":-87.8484},{"c":"KNWN","ct":"Seattle","st":"WA","f":1000,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News","sl":"NORTHWEST NEWS RADIO","ow":"Lotus Seattle Corp.","la":47.4634,"lo":-122.4421},{"c":"WMVP","ct":"Chicago","st":"IL","f":1000,"dp":"50 kW","np":"37 kW","dd":"Y","nd":"Y","fm":"Sports","sl":"ESPN 1000; ESPN Chicago","ow":"Good Karma Broadcasting, L.L.C.","la":41.5418,"lo":-88.0345},{"c":"KDKA","ct":"Pittsburgh","st":"PA","f":1020,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"100.1 FM AND 1020 AM KDKA","ow":"Audacy License, LLC","la":40.5592,"lo":-79.9528},{"c":"KVNT","ct":"Eagle River","st":"AK","f":1020,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"Talk","sl":"VALLEY NEWSTALK 1020","ow":"Christian Broadcasting, Inc.","la":61.4847,"lo":-149.7661},{"c":"WBZ","ct":"Boston","st":"MA","f":1030,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"News","sl":"WBZ NewsRadio 1030","ow":"IHM LICENSES, LLC","la":42.279,"lo":-70.8756},{"c":"WHO","ct":"Des Moines","st":"IA","f":1040,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"NewsRadio 1040 WHO","ow":"IHM LICENSES, LLC","la":41.6533,"lo":-93.3491},{"c":"KYW","ct":"Philadelphia","st":"PA","f":1060,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"News","sl":"KYW Newsradio","ow":"Audacy License, LLC","la":40.1034,"lo":-75.2485},{"c":"KNX","ct":"Los Angeles","st":"CA","f":1070,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"KNX News 97-1 FM","ow":"Audacy License, LLC","la":33.8597,"lo":-118.3498},{"c":"KOAN","ct":"Anchorage","st":"AK","f":1080,"dp":"10 kW","np":"10 kW","dd":"N","nd":"N","fm":"Talk","sl":"LA ESTACION DE LA FAMILIA","ow":"Iglesia Pentecostal Vispera del Fin","la":61.1194,"lo":-149.8975},{"c":"KRLD","ct":"Dallas","st":"TX","f":1080,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News","sl":"NewsRadio 1080 KRLD","ow":"Audacy License, LLC","la":32.8904,"lo":-96.6458},{"c":"WTIC","ct":"Hartford","st":"CT","f":1080,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News/Talk","sl":"WTIC NewsTalk 1080","ow":"Audacy License, LLC","la":41.7776,"lo":-72.8048},{"c":"WBAL","ct":"Baltimore","st":"MD","f":1090,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News/Talk","sl":"WBAL NEWSRADIO 1090 AM/101.5 FM","ow":"HEARST STATIONS INC.","la":39.3759,"lo":-76.7722},{"c":"WTAM","ct":"Cleveland","st":"OH","f":1100,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NEWSRADIO WTAM 1100","ow":"IHM LICENSES, LLC","la":41.2806,"lo":-81.6226},{"c":"KFAB","ct":"Omaha","st":"NE","f":1110,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News/Talk","sl":"NewsRadio 1110 KFAB","ow":"IHM LICENSES, LLC","la":41.1197,"lo":-96.002},{"c":"WBT","ct":"Charlotte","st":"NC","f":1110,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"Classic Rock","sl":"Z105","ow":"RADIO ONE OF NORTH CAROLINA, LLC","la":35.1324,"lo":-80.8895},{"c":"KMOX","ct":"St. Louis","st":"MO","f":1120,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Talk","sl":"104.1 FM KMOX","ow":"Audacy License, LLC","la":38.7223,"lo":-90.0546},{"c":"KWKH","ct":"Shreveport","st":"LA","f":1130,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"Sports","sl":"1130 THE TIGER","ow":"Townsquare License, LLC","la":32.7051,"lo":-93.8821},{"c":"WBBR","ct":"New York","st":"NY","f":1130,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News","sl":"Bloomberg 11-3-0","ow":"Bloomberg Communications Inc.","la":40.8109,"lo":-74.0396},{"c":"WRVA","ct":"Richmond","st":"VA","f":1140,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"News/Talk","sl":"NEWS RADIO 1140/96.1","ow":"Audacy License, LLC","la":37.4045,"lo":-77.3148},{"c":"KSL","ct":"Salt Lake City","st":"UT","f":1160,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"KSL Newsradio 102.7 FM","ow":"Bonneville International Corporation","la":40.7794,"lo":-112.0997},{"c":"KJNP","ct":"North Pole","st":"AK","f":1170,"dp":"50 kW","np":"21 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"GOSPEL STATION AT THE TOP OF THE NATION","ow":"EVANGELISTIC ALASKA MISSIONARY FELLOWSHIP, INC.","la":64.7588,"lo":-147.3257},{"c":"KOTV","ct":"Tulsa","st":"OK","f":1170,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News","sl":"1170 News on 6 Now","ow":"Griffin Licensing, L.L.C.","la":36.147,"lo":-95.8078},{"c":"WWVA","ct":"Wheeling","st":"WV","f":1170,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News","sl":"NewsRadio 1170 WWVA","ow":"IHM LICENSES, LLC","la":40.102,"lo":-80.867},{"c":"WHAM","ct":"Rochester","st":"NY","f":1180,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NEWSRADIO WHAM 1180","ow":"IHM LICENSES, LLC","la":43.082,"lo":-77.7247},{"c":"KEX","ct":"Portland","st":"OR","f":1190,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News","sl":"NewsRadio 1190 KEX","ow":"IHM LICENSES, LLC","la":45.4221,"lo":-122.567},{"c":"WOAI","ct":"San Antonio","st":"TX","f":1200,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"News","sl":"Newsradio 1200 WOAI","ow":"IHM LICENSES, LLC","la":29.5022,"lo":-98.1289},{"c":"WPHT","ct":"Philadelphia","st":"PA","f":1210,"dp":"50 kW","np":"50 kW","dd":"N","nd":"N","fm":"Talk","sl":"Talk Radio 1210 WPHT","ow":"Audacy License, LLC","la":39.9796,"lo":-74.9866},{"c":"KSTP","ct":"St. Paul","st":"MN","f":1500,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"Sports","sl":"SKOR NORTH","ow":"KSTP-AM, LLC","la":45.0255,"lo":-93.048},{"c":"WFED","ct":"Washington","st":"DC","f":1500,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"Talk","sl":"FEDERAL NEWS NETWORK","ow":"Washington DC FCC License Sub, LLC","la":39.0418,"lo":-77.0455},{"c":"KGA","ct":"Spokane","st":"WA","f":1510,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"Sports","sl":"''Fox Sports Radio 103.5/1510, The Game''","ow":"SMG-SPOKANE, LLC","la":47.5021,"lo":-117.386},{"c":"WLAC","ct":"Nashville","st":"TN","f":1510,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News/Talk","sl":"TALK RADIO 98.3 AND 1510 WLAC","ow":"IHM LICENSES, LLC","la":36.272,"lo":-86.7578},{"c":"KOKC","ct":"Oklahoma City","st":"OK","f":1520,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"Talk","sl":"KOKC 95.3 FM 1520 AM","ow":"TYLER MEDIA, L.L.C.","la":35.3331,"lo":-97.5042},{"c":"WWKB","ct":"Buffalo","st":"NY","f":1520,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"Sports","sl":"The Bet Buffalo","ow":"Audacy License, LLC","la":42.7695,"lo":-78.8425},{"c":"KFBK","ct":"Sacramento","st":"CA","f":1530,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"News/Talk","sl":"NEWS 93.1","ow":"IHM LICENSES, LLC","la":38.8482,"lo":-121.4838},{"c":"WCKY","ct":"Cincinnati","st":"OH","f":1530,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"Sports","sl":"ESPN 1530","ow":"IHM LICENSES, LLC","la":39.067,"lo":-84.6065},{"c":"KXEL","ct":"Waterloo","st":"IA","f":1540,"dp":"50 kW","np":"50 kW","dd":"N","nd":"Y","fm":"News/Talk","sl":"NEWSTALK 1540","ow":"NRG LICENSE SUB, LLC","la":42.1794,"lo":-92.3044},{"c":"KNZR","ct":"Bakersfield","st":"CA","f":1560,"dp":"25 kW","np":"10 kW","dd":"N","nd":"Y","fm":"Talk","sl":"KNZR AM1560 & FM97.7","ow":"Frequency Broadcasting Inc.","la":35.3083,"lo":-119.0471},{"c":"WFME","ct":"New York","st":"NY","f":1560,"dp":"50 kW","np":"50 kW","dd":"Y","nd":"Y","fm":"Religious Teaching","sl":"FAMILY RADIO","ow":"LOAM MEDIA, INC.","la":40.7168,"lo":-73.9174}];
+const ACCENT = '#8c2a1e';
+
+const map = L.map('map', {
+  zoomSnap: 0.25, zoomDelta: 0.5,
+  attributionControl: false, scrollWheelZoom: true,
+}).setView([39, -97], 4);
+L.control.attribution({position:'bottomright', prefix:false})
+  .addAttribution('© OpenStreetMap · © CARTO · RadioLand').addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png?key=cb1_3l5z_1_c2741af3163cc6d13274fde6', {
+  maxZoom: 10, subdomains: 'abcd',
+}).addTo(map);
+
+function tipHTML(s){
+  const dir = (code) => code === 'Y' ? ' <span style="color:#f5a742">(DA)</span>' : '';
+  const powLine = (s.dp && s.np && s.dp === s.np)
+    ? `${s.dp} day/night${dir(s.dd)}`
+    : `${s.dp}${dir(s.dd)} day · ${s.np}${dir(s.nd)} night`;
+  const fmLine = s.fm ? `<span class="fm">${s.fm}${s.sl ? ' — "' + s.sl + '"' : ''}</span>` : '';
+  return `<div>`
+       + `<b>${s.c}</b> <span class="freq">${s.f}</span><br>`
+       + `${s.ct}, ${s.st}`
+       + `<span class="pw">${powLine}</span>`
+       + (fmLine ? `<br>${fmLine}` : '')
+       + (s.ow ? `<span class="ow">${s.ow}</span>` : '')
+       + `</div>`;
+}
+
+const markers = STATIONS.map(s => {
+  const m = L.circleMarker([s.la, s.lo], {
+    radius: 6, color:'#fff', weight: 1.3,
+    fillColor: ACCENT, fillOpacity: 0.92,
+  }).bindTooltip(tipHTML(s), {className:'sta', direction:'top', offset:[0,-5]});
+  m.on('mouseover', () => m.setStyle({radius: 9, weight: 2}));
+  m.on('mouseout',  () => m.setStyle({radius: 6, weight: 1.3}));
+  m._sta = s;
+  return m;
+});
+const layer = L.layerGroup(markers).addTo(map);
+
+// ---- Roster table ----
+const tbody = document.getElementById('rosterBody');
+let sortKey = 'f', sortDir = 1;
+
+function renderRoster(filterText){
+  const q = (filterText || '').toLowerCase().trim();
+  const rows = STATIONS.filter(s => {
+    if (!q) return true;
+    return ['c','ct','st','ow','fm','sl'].some(k => (s[k]||'').toLowerCase().includes(q))
+        || String(s.f || '').includes(q);
+  });
+  rows.sort((a,b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (sortKey === 'f') { av = +av||0; bv = +bv||0; }
+    else if (sortKey === 'dp' || sortKey === 'np') {
+      const parse = v => { if(!v) return 0; const n = parseFloat(v); return v.includes('kW') ? n : n/1000; };
+      av = parse(av); bv = parse(bv);
+    } else {
+      av = (av||'').toString().toLowerCase();
+      bv = (bv||'').toString().toLowerCase();
+    }
+    if (av < bv) return -1 * sortDir;
+    if (av > bv) return  1 * sortDir;
+    return 0;
+  });
+  let html = '';
+  for (const s of rows){
+    const dirTag = (c) => c === 'Y' ? '<span class="dir DA">DA</span>' : '<span class="dir ND">ND</span>';
+    html += '<tr>'
+      + `<td class="call">${s.c || ''}</td>`
+      + `<td class="num">${s.f ?? ''}</td>`
+      + `<td>${s.ct || ''}</td>`
+      + `<td>${s.st || ''}</td>`
+      + `<td class="num">${s.dp || ''}${s.dp ? dirTag(s.dd) : ''}</td>`
+      + `<td class="num">${s.np || ''}${s.np ? dirTag(s.nd) : ''}</td>`
+      + `<td class="muted">${s.fm || ''}</td>`
+      + `<td class="muted">${s.sl || ''}</td>`
+      + `<td class="muted">${s.ow || ''}</td>`
+      + '</tr>';
+  }
+  tbody.innerHTML = html;
+  document.getElementById('count').textContent =
+    rows.length === STATIONS.length ? '' : `${rows.length} of ${STATIONS.length} shown`;
+  document.querySelectorAll('table.sta th').forEach(th => {
+    th.classList.remove('sorted-asc','sorted-desc');
+    if (th.dataset.k === sortKey) th.classList.add(sortDir === 1 ? 'sorted-asc' : 'sorted-desc');
+  });
+}
+
+document.querySelectorAll('table.sta th').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.k;
+    if (sortKey === k) sortDir = -sortDir;
+    else { sortKey = k; sortDir = 1; }
+    renderRoster(document.getElementById('q').value);
+  });
+});
+document.getElementById('q').addEventListener('input', (e) => renderRoster(e.target.value));
+renderRoster('');
+</script>
+</body>
+</html>
