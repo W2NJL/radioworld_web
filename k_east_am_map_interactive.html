@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_6b4d755adc728731ec25f1555b36efbe {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+    <div style="position:fixed;top:10px;left:50%;transform:translateX(-50%);
+                background:#ffffff;border:1px solid #d4cfc5;
+                box-shadow:0 2px 6px rgba(0,0,0,0.08);
+                padding:10px 18px;border-radius:6px;z-index:9999;
+                font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+                text-align:center;max-width:92vw;">
+      <div style="font-family:Charter,Georgia,'PT Serif',serif;font-size:19px;
+                  font-weight:700;color:#1a1a1a;">
+        The seven &ldquo;K&rdquo; stations east of the Mississippi
+      </div>
+      <div style="font-size:12px;color:#5a5852;margin-top:2px;">
+        The FCC reserves &ldquo;K&rdquo; for the West and &ldquo;W&rdquo; for the East &mdash;
+        but there are seven exceptions. Click a dot for power, towers, owner and format.
+      </div>
+    </div>
+    
+    
+    <div style="position:fixed;bottom:12px;right:12px;background:#ffffff;
+                border:1px solid #d4cfc5;padding:4px 10px;border-radius:4px;
+                font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+                font-size:11px;color:#5a5852;z-index:9999;">
+      Source: FCC LMS via RadioLand database &middot; Nick Langan for Radio World
+    </div>
+    
+    
+            <div class="folium-map" id="map_6b4d755adc728731ec25f1555b36efbe" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_6b4d755adc728731ec25f1555b36efbe = L.map(
+                "map_6b4d755adc728731ec25f1555b36efbe",
+                {
+                    center: [40.00759428571428, -84.03321285714286],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 5,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_6b4d755adc728731ec25f1555b36efbe);
+
+            
+
+        
+    
+            var tile_layer_605104e09d4d2d67e0caac5aeba28bef = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?key=cb1_3l5z_1_c2741af3163cc6d13274fde6",
+                {
+  "minZoom": 0,
+  "maxZoom": 18,
+  "maxNativeZoom": 18,
+  "noWrap": false,
+  "attribution": "\u0026copy; OpenStreetMap \u0026middot; \u0026copy; CARTO \u0026middot; RadioLand",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_605104e09d4d2d67e0caac5aeba28bef.addTo(map_6b4d755adc728731ec25f1555b36efbe);
+        
+    
+            var circle_marker_e5448a647ef935747b86a3a84eda2f76 = L.circleMarker(
+                [40.55922, -79.95283],
+                {"bubblingMouseEvents": true, "color": "#1a1a1a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8c2a1e", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.2}
+            ).addTo(map_6b4d755adc728731ec25f1555b36efbe);
+        
+    
+        var popup_bc846f21c38f44c1c85594a1215f0d73 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_5557076dc3182b9af9d3870f68ece591 = $(`<div id="html_5557076dc3182b9af9d3870f68ece591" style="width: 100.0%; height: 100.0%;"><div style='font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;min-width:240px;'><div style='font-family:Charter,Georgia,"PT Serif",serif;font-size:18px;font-weight:700;color:#8c2a1e;letter-spacing:0.3px;'>KDKA</div><div style='font-size:12px;color:#5a5852;margin-bottom:6px;'>1020 kHz &middot; Pittsburgh, Pa.</div><table style='border-collapse:collapse;'><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Frequency</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>1020 kHz</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>City</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Pittsburgh, Pa.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Owner</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Audacy License, LLC</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Format</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>News/Talk</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Slogan</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>&ldquo;100.1 FM and 1020 AM KDKA&rdquo;</td></tr><tr><td colspan='2' style='padding-top:8px;'><hr style='border:none;border-top:1px solid #d4cfc5;margin:4px 0 6px 0;'/></td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Day</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>50 kW &middot; 1 tower</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Night</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>50 kW &middot; 1 tower</td></tr></table></div></div>`)[0];
+                popup_bc846f21c38f44c1c85594a1215f0d73.setContent(html_5557076dc3182b9af9d3870f68ece591);
+            
+        
+
+        circle_marker_e5448a647ef935747b86a3a84eda2f76.bindPopup(popup_bc846f21c38f44c1c85594a1215f0d73)
+        ;
+
+        
+    
+    
+            circle_marker_e5448a647ef935747b86a3a84eda2f76.bindTooltip(
+                `<div>
+                     <b>KDKA</b> &middot; 1020 kHz<br>Pittsburgh, Pa.
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d5af104fa0be2bc604ed2876a1a9b301 = L.circleMarker(
+                [40.52339, -80.01089],
+                {"bubblingMouseEvents": true, "color": "#1a1a1a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8c2a1e", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.2}
+            ).addTo(map_6b4d755adc728731ec25f1555b36efbe);
+        
+    
+        var popup_06030b2c53200c821bfaa8d6cec3a049 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_00e5aa54ef4543e563a721a9308bdfd6 = $(`<div id="html_00e5aa54ef4543e563a721a9308bdfd6" style="width: 100.0%; height: 100.0%;"><div style='font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;min-width:240px;'><div style='font-family:Charter,Georgia,"PT Serif",serif;font-size:18px;font-weight:700;color:#8c2a1e;letter-spacing:0.3px;'>KQV</div><div style='font-size:12px;color:#5a5852;margin-bottom:6px;'>1410 kHz &middot; Pittsburgh, Pa.</div><table style='border-collapse:collapse;'><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Frequency</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>1410 kHz</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>City</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Pittsburgh, Pa.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Owner</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Broadcast Educational Communications, Inc.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Format</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Easy Listening</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Slogan</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>&ldquo;Easy 88.1 WKGO&rdquo;</td></tr><tr><td colspan='2' style='padding-top:8px;'><hr style='border:none;border-top:1px solid #d4cfc5;margin:4px 0 6px 0;'/></td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Day</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>5 kW &middot; 3 towers</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Night</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>5 kW &middot; 5 towers</td></tr></table></div></div>`)[0];
+                popup_06030b2c53200c821bfaa8d6cec3a049.setContent(html_00e5aa54ef4543e563a721a9308bdfd6);
+            
+        
+
+        circle_marker_d5af104fa0be2bc604ed2876a1a9b301.bindPopup(popup_06030b2c53200c821bfaa8d6cec3a049)
+        ;
+
+        
+    
+    
+            circle_marker_d5af104fa0be2bc604ed2876a1a9b301.bindTooltip(
+                `<div>
+                     <b>KQV</b> &middot; 1410 kHz<br>Pittsburgh, Pa.
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_11b11a9f6370df4960be79ab0ea16766 = L.circleMarker(
+                [40.10344, -75.2485],
+                {"bubblingMouseEvents": true, "color": "#1a1a1a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8c2a1e", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.2}
+            ).addTo(map_6b4d755adc728731ec25f1555b36efbe);
+        
+    
+        var popup_f1a1754e6eecd1747161071e56aafd02 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_af8657a40f07fddc47e01cfa1945e265 = $(`<div id="html_af8657a40f07fddc47e01cfa1945e265" style="width: 100.0%; height: 100.0%;"><div style='font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;min-width:240px;'><div style='font-family:Charter,Georgia,"PT Serif",serif;font-size:18px;font-weight:700;color:#8c2a1e;letter-spacing:0.3px;'>KYW</div><div style='font-size:12px;color:#5a5852;margin-bottom:6px;'>1060 kHz &middot; Philadelphia, Pa.</div><table style='border-collapse:collapse;'><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Frequency</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>1060 kHz</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>City</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Philadelphia, Pa.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Owner</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Audacy License, LLC</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Format</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>News</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Slogan</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>&ldquo;KYW Newsradio&rdquo;</td></tr><tr><td colspan='2' style='padding-top:8px;'><hr style='border:none;border-top:1px solid #d4cfc5;margin:4px 0 6px 0;'/></td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Day</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>50 kW &middot; 2 towers</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Night</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>50 kW &middot; 2 towers</td></tr></table></div></div>`)[0];
+                popup_f1a1754e6eecd1747161071e56aafd02.setContent(html_af8657a40f07fddc47e01cfa1945e265);
+            
+        
+
+        circle_marker_11b11a9f6370df4960be79ab0ea16766.bindPopup(popup_f1a1754e6eecd1747161071e56aafd02)
+        ;
+
+        
+    
+    
+            circle_marker_11b11a9f6370df4960be79ab0ea16766.bindTooltip(
+                `<div>
+                     <b>KYW</b> &middot; 1060 kHz<br>Philadelphia, Pa.
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2370ad3962136af7e47567f0ec7b0af4 = L.circleMarker(
+                [42.15364, -84.54914],
+                {"bubblingMouseEvents": true, "color": "#1a1a1a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8c2a1e", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.2}
+            ).addTo(map_6b4d755adc728731ec25f1555b36efbe);
+        
+    
+        var popup_86cf478a9be2ad901b478c33dff3609a = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_f48ecd183d1dcbdcd0a97928bda7d34b = $(`<div id="html_f48ecd183d1dcbdcd0a97928bda7d34b" style="width: 100.0%; height: 100.0%;"><div style='font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;min-width:240px;'><div style='font-family:Charter,Georgia,"PT Serif",serif;font-size:18px;font-weight:700;color:#8c2a1e;letter-spacing:0.3px;'>KTGG</div><div style='font-size:12px;color:#5a5852;margin-bottom:6px;'>1540 kHz &middot; Spring Arbor, Mich.</div><table style='border-collapse:collapse;'><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Frequency</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>1540 kHz</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>City</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Spring Arbor, Mich.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Owner</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>West Central Michigan Media Ministries</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Format</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Contemporary Christian</td></tr><tr><td colspan='2' style='padding-top:8px;'><hr style='border:none;border-top:1px solid #d4cfc5;margin:4px 0 6px 0;'/></td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Day</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>450 W &middot; 1 tower</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Night</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'><em style='color:#8a857a;'>daytime-only</em></td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Critical hours</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>185 W &middot; 1 tower</td></tr></table></div></div>`)[0];
+                popup_86cf478a9be2ad901b478c33dff3609a.setContent(html_f48ecd183d1dcbdcd0a97928bda7d34b);
+            
+        
+
+        circle_marker_2370ad3962136af7e47567f0ec7b0af4.bindPopup(popup_86cf478a9be2ad901b478c33dff3609a)
+        ;
+
+        
+    
+    
+            circle_marker_2370ad3962136af7e47567f0ec7b0af4.bindTooltip(
+                `<div>
+                     <b>KTGG</b> &middot; 1540 kHz<br>Spring Arbor, Mich.
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_2b4ab3732228f6840c11e5144dea3dff = L.circleMarker(
+                [43.79111, -88.47122],
+                {"bubblingMouseEvents": true, "color": "#1a1a1a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8c2a1e", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.2}
+            ).addTo(map_6b4d755adc728731ec25f1555b36efbe);
+        
+    
+        var popup_48f03bd810312fe58f6150ba3a18bd15 = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_9627bb955d8fdf27e9569a5e73240439 = $(`<div id="html_9627bb955d8fdf27e9569a5e73240439" style="width: 100.0%; height: 100.0%;"><div style='font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;min-width:240px;'><div style='font-family:Charter,Georgia,"PT Serif",serif;font-size:18px;font-weight:700;color:#8c2a1e;letter-spacing:0.3px;'>KFIZ</div><div style='font-size:12px;color:#5a5852;margin-bottom:6px;'>1450 kHz &middot; Fond du Lac, Wis.</div><table style='border-collapse:collapse;'><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Frequency</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>1450 kHz</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>City</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Fond du Lac, Wis.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Owner</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>RBH Enterprises, Inc.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Format</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>News/Talk</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Slogan</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>&ldquo;KFIZ News Talk 1450AM&rdquo;</td></tr><tr><td colspan='2' style='padding-top:8px;'><hr style='border:none;border-top:1px solid #d4cfc5;margin:4px 0 6px 0;'/></td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Day</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>1 kW &middot; 1 tower</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Night</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>1 kW &middot; 1 tower</td></tr></table></div></div>`)[0];
+                popup_48f03bd810312fe58f6150ba3a18bd15.setContent(html_9627bb955d8fdf27e9569a5e73240439);
+            
+        
+
+        circle_marker_2b4ab3732228f6840c11e5144dea3dff.bindPopup(popup_48f03bd810312fe58f6150ba3a18bd15)
+        ;
+
+        
+    
+    
+            circle_marker_2b4ab3732228f6840c11e5144dea3dff.bindTooltip(
+                `<div>
+                     <b>KFIZ</b> &middot; 1450 kHz<br>Fond du Lac, Wis.
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f105688a669a1678673c938c6384bec9 = L.circleMarker(
+                [37.78783, -89.90594],
+                {"bubblingMouseEvents": true, "color": "#1a1a1a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8c2a1e", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.2}
+            ).addTo(map_6b4d755adc728731ec25f1555b36efbe);
+        
+    
+        var popup_ed3ae72449dc5d300ffb227f4aa1973d = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_a3a6cad22324af3e12ff9bdd6034fe24 = $(`<div id="html_a3a6cad22324af3e12ff9bdd6034fe24" style="width: 100.0%; height: 100.0%;"><div style='font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;min-width:240px;'><div style='font-family:Charter,Georgia,"PT Serif",serif;font-size:18px;font-weight:700;color:#8c2a1e;letter-spacing:0.3px;'>KSGM</div><div style='font-size:12px;color:#5a5852;margin-bottom:6px;'>980 kHz &middot; Chester, Ill.</div><table style='border-collapse:collapse;'><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Frequency</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>980 kHz</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>City</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Chester, Ill.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Owner</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Donze Communications, Inc.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Format</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Country</td></tr><tr><td colspan='2' style='padding-top:8px;'><hr style='border:none;border-top:1px solid #d4cfc5;margin:4px 0 6px 0;'/></td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Day</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>1 kW &middot; 1 tower</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Night</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>470 W &middot; 2 towers</td></tr></table></div></div>`)[0];
+                popup_ed3ae72449dc5d300ffb227f4aa1973d.setContent(html_a3a6cad22324af3e12ff9bdd6034fe24);
+            
+        
+
+        circle_marker_f105688a669a1678673c938c6384bec9.bindPopup(popup_ed3ae72449dc5d300ffb227f4aa1973d)
+        ;
+
+        
+    
+    
+            circle_marker_f105688a669a1678673c938c6384bec9.bindTooltip(
+                `<div>
+                     <b>KSGM</b> &middot; 980 kHz<br>Chester, Ill.
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4d729c52be1ace2cbc298be7f21ddcec = L.circleMarker(
+                [35.13453, -90.09397],
+                {"bubblingMouseEvents": true, "color": "#1a1a1a", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#8c2a1e", "fillOpacity": 0.95, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 8, "stroke": true, "weight": 1.2}
+            ).addTo(map_6b4d755adc728731ec25f1555b36efbe);
+        
+    
+        var popup_2ab8a7bc32d9e3e3963a38d1d2d3a63b = L.popup({
+  "maxWidth": 360,
+});
+
+        
+            
+                var html_6f13af997784bada7cb47bedbb10ca81 = $(`<div id="html_6f13af997784bada7cb47bedbb10ca81" style="width: 100.0%; height: 100.0%;"><div style='font-family:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;min-width:240px;'><div style='font-family:Charter,Georgia,"PT Serif",serif;font-size:18px;font-weight:700;color:#8c2a1e;letter-spacing:0.3px;'>KWAM</div><div style='font-size:12px;color:#5a5852;margin-bottom:6px;'>990 kHz &middot; Memphis, Tenn.</div><table style='border-collapse:collapse;'><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Frequency</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>990 kHz</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>City</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Memphis, Tenn.</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Owner</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Starnes Media Group, LLC</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Format</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>Talk</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Slogan</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>&ldquo;The Mighty 990&rdquo;</td></tr><tr><td colspan='2' style='padding-top:8px;'><hr style='border:none;border-top:1px solid #d4cfc5;margin:4px 0 6px 0;'/></td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Day</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>10 kW &middot; 2 towers</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Night</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>450 W &middot; 2 towers</td></tr><tr><td style='padding:3px 10px 3px 0;color:#5a5852;font-size:12px;vertical-align:top;white-space:nowrap;'>Critical hours</td><td style='padding:3px 0;color:#1a1a1a;font-size:13px;'>5 kW &middot; 3 towers</td></tr></table></div></div>`)[0];
+                popup_2ab8a7bc32d9e3e3963a38d1d2d3a63b.setContent(html_6f13af997784bada7cb47bedbb10ca81);
+            
+        
+
+        circle_marker_4d729c52be1ace2cbc298be7f21ddcec.bindPopup(popup_2ab8a7bc32d9e3e3963a38d1d2d3a63b)
+        ;
+
+        
+    
+    
+            circle_marker_4d729c52be1ace2cbc298be7f21ddcec.bindTooltip(
+                `<div>
+                     <b>KWAM</b> &middot; 990 kHz<br>Memphis, Tenn.
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            map_6b4d755adc728731ec25f1555b36efbe.fitBounds(
+                [[33.63453, -91.59397], [45.29111, -73.7485]],
+                {}
+            );
+        
+</script>
+</html>
