@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>North American AM Expanded Band — 1620 to 1700 kHz</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin="">
+<style>
+  :root { --ink:#1a1a1a; --muted:#555; --bg:#faf7f2; --accent:#8c2a1e;
+          --ca:#1f4e8a; --mx:#2d6a3e; }
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .wrap{max-width:1200px;margin:0 auto;padding:14px 18px 24px;}
+  h1{font-size:1.4rem;margin:0 0 4px;font-weight:700;letter-spacing:-0.01em;}
+  .sub{color:var(--muted);font-size:0.86rem;margin:0 0 12px;line-height:1.4;}
+  .sub a{color:var(--accent);text-decoration:underline;text-decoration-color:#d4bca5;
+         text-underline-offset:2px;}
+  .sub a:hover{text-decoration-color:var(--accent);}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;margin:0 0 8px;
+          font-size:.78rem;color:var(--muted);}
+  .legend .dot{display:inline-block;width:10px;height:10px;border-radius:50%;
+          margin-right:5px;vertical-align:middle;border:1.3px solid #fff;
+          box-shadow:0 0 0 1px rgba(0,0,0,.12);}
+  .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px;}
+  .controls label{font-size:0.82rem;color:var(--muted);}
+  input[type=search]{font:inherit;padding:5px 8px;border:1px solid #d4cfc5;border-radius:4px;
+         background:#fff;color:var(--ink);min-width:220px;}
+  #map{height:620px;width:100%;border-radius:6px;background:#dfe8ef;
+       box-shadow:0 1px 3px rgba(0,0,0,.08);}
+  .cred{font-size:0.76rem;color:var(--muted);margin-top:10px;}
+  .list{margin-top:18px;padding-top:12px;border-top:1px solid #d4cfc5;}
+  .list h2{font-size:1rem;font-weight:600;margin:0 0 8px;color:var(--ink);}
+  .list .cnt{font-size:0.78rem;color:var(--muted);font-weight:400;margin-left:6px;}
+  .list-scroll{max-height:520px;overflow-y:auto;border:1px solid #d4cfc5;border-radius:4px;}
+  table.sta{width:100%;border-collapse:collapse;font-size:0.84rem;}
+  table.sta th{text-align:left;padding:6px 10px;color:var(--muted);
+         border-bottom:1px solid #d4cfc5;font-weight:500;position:sticky;top:0;
+         background:var(--bg);cursor:pointer;user-select:none;}
+  table.sta th.sorted-asc:after  { content:' \25B2'; font-size:.65em; color:var(--accent); }
+  table.sta th.sorted-desc:after { content:' \25BC'; font-size:.65em; color:var(--accent); }
+  table.sta td{padding:4px 10px;border-bottom:1px solid #eee6d7;vertical-align:top;}
+  table.sta tr:hover td{background:#f1ece3;}
+  table.sta td.call{font-weight:700;color:var(--accent);}
+  table.sta tr.CA td.call{color:var(--ca);}
+  table.sta tr.MX td.call{color:var(--mx);}
+  table.sta td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  table.sta td.muted{color:var(--muted);font-size:.78rem;}
+  .dir{display:inline-block;font-size:.65rem;font-weight:600;padding:1px 4px;
+       border-radius:3px;margin-left:4px;color:#fff;vertical-align:middle;}
+  .dir.ND{background:#4a7a4a;}
+  .dir.DA{background:#b0792a;}
+  .leaflet-tooltip.sta{background:#1a1a1a;color:#fff;border:none;
+         font-size:0.78rem;padding:6px 9px;border-radius:4px;max-width:260px;
+         line-height:1.3;}
+  .leaflet-tooltip.sta:before{display:none;}
+  .leaflet-tooltip.sta b{color:#f5a742;}
+  .leaflet-tooltip.sta .freq{color:#f5a742;font-weight:700;}
+  .leaflet-tooltip.sta .ow{color:#bbb;font-size:.70rem;margin-top:3px;display:block;}
+  .leaflet-tooltip.sta .pw{color:#eee;font-size:.72rem;margin-top:2px;display:block;}
+  .leaflet-tooltip.sta .fm{color:#9ad;font-size:.72rem;font-style:italic;}
+  @media (max-width:620px){
+    #map{height:460px;}
+    h1{font-size:1.15rem;}
+    .sub{font-size:0.80rem;}
+    table.sta{font-size:0.78rem;}
+    table.sta td,table.sta th{padding:3px 6px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>The AM expanded band — stations above 1600 on the dial</h1>
+  <p class="sub">Every licensee between 1620 and 1700 kHz — the nine channels
+     added to the standard AM band through the
+     <a href="https://en.wikipedia.org/wiki/Rio_Agreement_(1986)" target="_blank"
+     rel="noopener">1986 Rio Agreement</a> and opened by the FCC starting in
+     1997 to relieve congestion on the main AM dial.
+     Includes <strong>49 U.S. stations</strong>, <strong>5 Canadian
+     stations</strong> and <strong>10 Mexican licenses</strong>
+     (3 Mexican sites appear on the map; the rest aren't geocoded in FCC
+     notifications). Hover any dot for call letters, city of license,
+     frequency, power and format.</p>
+
+  <div class="legend">
+    <span><span class="dot" style="background:#8c2a1e"></span>U.S. (49)</span>
+    <span><span class="dot" style="background:#1f4e8a"></span>Canada (5)</span>
+    <span><span class="dot" style="background:#2d6a3e"></span>Mexico (3 geocoded of 10)</span>
+  </div>
+
+  <div class="controls">
+    <label for="q">Filter:</label>
+    <input id="q" type="search" placeholder="callsign, city, state, owner…">
+    <span id="count" style="font-size:.78rem;color:var(--muted);"></span>
+  </div>
+
+  <div id="map"></div>
+
+  <div class="list">
+    <h2>Expanded-band roster <span class="cnt">(64 licensees — click column headers to sort)</span></h2>
+    <div class="list-scroll">
+      <table class="sta" id="roster">
+        <thead><tr>
+          <th data-k="c">Call</th>
+          <th data-k="f" class="num">Freq</th>
+          <th data-k="ct">City</th>
+          <th data-k="st">St/Prov</th>
+          <th data-k="co">Country</th>
+          <th data-k="dp" class="num">Day</th>
+          <th data-k="np" class="num">Night</th>
+          <th data-k="fm">Format</th>
+          <th data-k="sl">Slogan</th>
+          <th data-k="ow">Owner</th>
+        </tr></thead>
+        <tbody id="rosterBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="cred">Data: FCC LMS + international notifications via RadioLand database · Map: Nick Langan for Radio World</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+        crossorigin=""></script>
+<script>
+const STATIONS = [{"c":"KOZN","ct":"","st":"NE","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"''1620 The Zone''","ow":"Usher Media of Omaha, L.L.C.","la":41.1892,"lo":-96.0056},{"c":"KSMH","ct":"","st":"CA","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"RELEVANT RADIO","ow":"RELEVANT RADIO, INC.","la":38.588,"lo":-121.4691},{"c":"KYIZ","ct":"","st":"WA","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"The Z Twins","ow":"Bennett Media Group, LLC","la":47.4401,"lo":-122.2037},{"c":"WDHP","ct":"","st":"VI","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News","sl":"1620 The Reef","ow":"REEF BROADCASTING, INC.","la":17.7244,"lo":-64.8842},{"c":"WNRP","ct":"","st":"FL","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NEWSRADIO 92.3 FM 1620 AM","ow":"ADX COMMUNICATIONS OF ESCAMBIA","la":30.4291,"lo":-87.2408},{"c":"WTAW","ct":"","st":"TX","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"NEWSTALK 1620 AM & 94.5 FM","ow":"BRYAN BROADCASTING LICENSE CORPORATION","la":30.6202,"lo":-96.2539},{"c":"XECSCGU","ct":"","st":"","co":"MX","f":1620,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":26.8228,"lo":-107.0653},{"c":"KCJJ","ct":"","st":"IA","co":"US","f":1630,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Adult Contemporary","sl":"The Mighty 1630 KCJJ","ow":"River City Radio, Inc.","la":41.6009,"lo":-91.5013},{"c":"KFBU","ct":"","st":"WY","co":"US","f":1630,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"YOUR NETWORK OF PRAISE","ow":"Hi-Line Radio Fellowship, Inc.","la":41.1228,"lo":-104.8025},{"c":"KKGM","ct":"","st":"TX","co":"US","f":1630,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News","sl":"BIN","ow":"iHM Licenses, LLC","la":32.8101,"lo":-97.1237},{"c":"XESCAH","ct":"","st":"","co":"MX","f":1630,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":19.7936,"lo":-101.1772},{"c":"KBJA","ct":"","st":"UT","co":"US","f":1640,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"''K-Talk''","ow":"UNITED BROADCASTING COMPANY, INC","la":40.713,"lo":-111.9322},{"c":"KDIA","ct":"","st":"CA","co":"US","f":1640,"dp":"10 kW","np":"10 kW","dd":"N","nd":"Y","fm":"Talk","sl":"''1640 KDIA''","ow":"New Inspiration Broadcasting Company, Inc.","la":37.8955,"lo":-122.3252},{"c":"KPAM","ct":"","st":"OR","co":"US","f":1640,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"","sl":"","ow":"SALEM MEDIA OF OREGON, INC.","la":45.4773,"lo":-122.7515},{"c":"KZLS","ct":"","st":"OK","co":"US","f":1640,"dp":"10 kW","np":"1 kW","dd":"Y","nd":"Y","fm":"Talk","sl":"FREEDOM 96.9","ow":"CHISHOLM TRAIL BROADCASTING CO.","la":36.1153,"lo":-97.7567},{"c":"WSJP","ct":"","st":"WI","co":"US","f":1640,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"RELEVANT RADIO","ow":"RELEVANT RADIO, INC.","la":43.0772,"lo":-88.1923},{"c":"CINA","ct":"Mississauga","st":"","co":"CA","f":1650,"dp":"","np":"","dd":"N","nd":"N","fm":"Talk","sl":"CINA 1650","ow":"1760791 Ontario Inc.","la":43.6256,"lo":-79.6311},{"c":"CKZW","ct":"Montr\u00e9al","st":"","co":"CA","f":1650,"dp":"","np":"","dd":"N","nd":"N","fm":"Ethnic","sl":"Radio Shalom","ow":"Communications M\u00e9dia \u00c9vang\u00e9liqu","la":45.4875,"lo":-73.6686},{"c":"KBJD","ct":"","st":"CO","co":"US","f":1650,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Contemporary Christian","sl":"Radio La RED","ow":"SALEM MEDIA OF COLORADO, INC.","la":39.7989,"lo":-104.9711},{"c":"KCNZ","ct":"","st":"IA","co":"US","f":1650,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"THE FAN 1650 -102.3","ow":"COLOFF MEDIA, LLC","la":42.4131,"lo":-92.4377},{"c":"KFOX","ct":"","st":"CA","co":"US","f":1650,"dp":"10 kW","np":"930 W","dd":"N","nd":"N","fm":"Ethnic","sl":"Radio Seoul","ow":"HK Media, Inc.","la":33.8917,"lo":-118.1851},{"c":"KFSW","ct":"","st":"AR","co":"US","f":1650,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Gospel Music","sl":"THE CROSS 98.7","ow":"M&M Media, LLC","la":35.2748,"lo":-94.4599},{"c":"KSVE","ct":"","st":"TX","co":"US","f":1650,"dp":"8.5 kW","np":"850 W","dd":"N","nd":"N","fm":"Sports","sl":"TUDN Radio El Paso","ow":"ENTRAVISION HOLDINGS, LLC","la":31.7537,"lo":-106.4166},{"c":"WJFV","ct":"","st":"VA","co":"US","f":1650,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"","ow":"Disruptor Radio LLC","la":36.8029,"lo":-76.2824},{"c":"KBRE","ct":"","st":"CA","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Classic Rock","sl":"105.7 THE BEAR","ow":"SMG-MERCED, LLC","la":37.278,"lo":-120.6274},{"c":"KQWB","ct":"","st":"ND","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"BISON 1660","ow":"RADIO FARGO-MOORHEAD, INC.","la":46.9758,"lo":-96.5842},{"c":"KRZI","ct":"","st":"TX","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"ESPN CENTRAL TEXAS BAYLOR","ow":"M&M Broadcasters, Ltd., Debtor-in-Possession","la":31.4129,"lo":-97.2108},{"c":"KWOD","ct":"","st":"KS","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"The Bet KC","ow":"Audacy License, LLC","la":39.0381,"lo":-94.6158},{"c":"WCNZ","ct":"","st":"FL","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"RELEVANT RADIO","ow":"RELEVANT RADIO, INC.","la":25.992,"lo":-81.6248},{"c":"WGIT","ct":"","st":"PR","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Spanish Religious","sl":"''Lighthouse 360''","ow":"INTERNATIONAL BROADCASTING CORPORATION","la":18.3839,"lo":-65.9207},{"c":"WWRU","ct":"","st":"NJ","co":"US","f":1660,"dp":"10 kW","np":"10 kW","dd":"Y","nd":"Y","fm":"Talk","sl":"AM 1660 K-Radio","ow":"MULTICULTURAL RADIO BROADCASTING LICENSEE, LLC","la":40.8204,"lo":-74.0674},{"c":"WZOX","ct":"","st":"MI","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Country","sl":"WIN 98-5","ow":"MIDWEST COMMUNICATIONS, INC.","la":42.2362,"lo":-85.5775},{"c":"CJEU","ct":"Gatineau","st":"","co":"CA","f":1670,"dp":"","np":"","dd":"N","nd":"N","fm":"","sl":"","ow":"Radio Communautaire Enfant-ado","la":45.5067,"lo":-75.6911},{"c":"KHPY","ct":"","st":"CA","co":"US","f":1670,"dp":"10 kW","np":"9 kW","dd":"Y","nd":"Y","fm":"Talk","sl":"","ow":"El Sembrador Ministries","la":34.0117,"lo":-117.185},{"c":"KQMS","ct":"","st":"CA","co":"US","f":1670,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NEWS TALK 1670 AM, 105.7 FM & 104.9 FM","ow":"SMG-REDDING, LLC","la":40.5585,"lo":-122.3311},{"c":"WMGE","ct":"","st":"GA","co":"US","f":1670,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News","sl":"Macon's BIN 1670","ow":"IHM LICENSES, LLC","la":32.8046,"lo":-83.6043},{"c":"WOZN","ct":"","st":"WI","co":"US","f":1670,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"THE ZONE","ow":"MID-WEST MANAGEMENT, INC.","la":43.0253,"lo":-89.3962},{"c":"KGED","ct":"","st":"CA","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Regional Mexican","sl":"","ow":"BENDITA EUCARISTIA RADIO INC.","la":36.7705,"lo":-119.9232},{"c":"KNTS","ct":"","st":"WA","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Ethnic","sl":"Radio Punjab","ow":"Baaz Broadcasting Corp.","la":47.6554,"lo":-122.5193},{"c":"KRJO","ct":"","st":"LA","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Country","sl":"99.7 THE LEGEND","ow":"HOLLADAY BROADCASTING OF LOUISIANA, LLC","la":32.4568,"lo":-92.0185},{"c":"WOKB","ct":"","st":"FL","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Gospel Music","sl":"INSPIRATION 1680","ow":"UNITY BROADCASTING LLC","la":28.5692,"lo":-81.5187},{"c":"WPRR","ct":"","st":"MI","co":"US","f":1680,"dp":"10 kW","np":"680 W","dd":"N","nd":"N","fm":"Urban Ac","sl":"102.5 THE RIDE","ow":"Ghettothropic, LLC","la":42.9359,"lo":-85.4573},{"c":"WTTM","ct":"","st":"NJ","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"(The Unique)","ow":"MULTICULTURAL RADIO BROADCASTING LICENSEE, LLC","la":39.8879,"lo":-75.001},{"c":"CHTO","ct":"Toronto","st":"","co":"CA","f":1690,"dp":"","np":"","dd":"N","nd":"N","fm":"","sl":"CHTO AM 1690","ow":"Canadian Hellenic Toronto Radio","la":43.7128,"lo":-79.3156},{"c":"CJLO","ct":"Montr\u00e9al","st":"","co":"CA","f":1690,"dp":"","np":"","dd":"N","nd":"N","fm":"","sl":"","ow":"Concordia Student Broadcasting","la":45.4478,"lo":-73.6578},{"c":"KDMT","ct":"","st":"CO","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"","sl":"","ow":"RELEVANT RADIO, INC.","la":39.6558,"lo":-105.0747},{"c":"KFSG","ct":"","st":"CA","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious","sl":"","ow":"WAY BROADCASTING LICENSEE, LLC","la":38.7477,"lo":-121.4936},{"c":"WIGT","ct":"","st":"VI","co":"US","f":1690,"dp":"920 W","np":"920 W","dd":"N","nd":"N","fm":"","sl":"","ow":"El Logos Inc.","la":18.3158,"lo":-64.8839},{"c":"WMLB","ct":"","st":"GA","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"''Freedom 1690''","ow":"Disruptor Radio, LLC","la":33.8096,"lo":-84.3538},{"c":"WPTX","ct":"","st":"MD","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Oldies","sl":"100.7 FM and 1690 AM WPTX","ow":"SOMAR COMMUNICATIONS, INC.","la":38.2829,"lo":-76.5605},{"c":"WVON","ct":"","st":"IL","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"AM 1690 WVON","ow":"IHM LICENSES, LLC","la":41.7373,"lo":-87.7012},{"c":"KTNO","ct":"","st":"TX","co":"US","f":1700,"dp":"10 kW","np":"800 W","dd":"N","nd":"N","fm":"","sl":"","ow":"CLARO COMMUNICATIONS, LTD.","la":32.7787,"lo":-96.7312},{"c":"KVNS","ct":"","st":"TX","co":"US","f":1700,"dp":"8.8 kW","np":"880 W","dd":"N","nd":"N","fm":"Sports","sl":"Fox Sports Radio 1700","ow":"IHM LICENSES, LLC","la":25.9495,"lo":-97.5544},{"c":"WEUP","ct":"","st":"AL","co":"US","f":1700,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Urban Contemporary","sl":"103.1 MOST HIP HOP AND R&B","ow":"HUNDLEY BATTS, SR. & VIRGINIA CAPLES","la":34.759,"lo":-86.6431},{"c":"WJCC","ct":"","st":"FL","co":"US","f":1700,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Ethnic","sl":"Radio Mega 1700 AM","ow":"MULTICULTURAL RADIO BROADCASTING LICENSEE, LLC","la":25.9009,"lo":-80.3637},{"c":"WRCR","ct":"","st":"NY","co":"US","f":1700,"dp":"500 W","np":"83 W","dd":"Y","nd":"Y","fm":"Talk","sl":"Talkradio 77 WABC","ow":"Red Apple Media, Inc.","la":41.0968,"lo":-74.0046},{"c":"XEPE","ct":"Tecate","st":"","co":"MX","f":1700,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"TUDN La Deportiva 1700 AM","ow":"","la":32.5383,"lo":-116.9886}];
+const ALL_STATIONS = [{"c":"KOZN","ct":"","st":"NE","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"''1620 The Zone''","ow":"Usher Media of Omaha, L.L.C.","la":41.1892,"lo":-96.0056},{"c":"KSMH","ct":"","st":"CA","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"RELEVANT RADIO","ow":"RELEVANT RADIO, INC.","la":38.588,"lo":-121.4691},{"c":"KYIZ","ct":"","st":"WA","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"The Z Twins","ow":"Bennett Media Group, LLC","la":47.4401,"lo":-122.2037},{"c":"WDHP","ct":"","st":"VI","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News","sl":"1620 The Reef","ow":"REEF BROADCASTING, INC.","la":17.7244,"lo":-64.8842},{"c":"WNRP","ct":"","st":"FL","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NEWSRADIO 92.3 FM 1620 AM","ow":"ADX COMMUNICATIONS OF ESCAMBIA","la":30.4291,"lo":-87.2408},{"c":"WTAW","ct":"","st":"TX","co":"US","f":1620,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"NEWSTALK 1620 AM & 94.5 FM","ow":"BRYAN BROADCASTING LICENSE CORPORATION","la":30.6202,"lo":-96.2539},{"c":"XECSCG","ct":"Guachochi","st":"","co":"MX","f":1620,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":null,"lo":null},{"c":"XECSCGU","ct":"","st":"","co":"MX","f":1620,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":26.8228,"lo":-107.0653},{"c":"XECSIA","ct":"P\u00e1tzcuaro","st":"","co":"MX","f":1620,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":null,"lo":null},{"c":"KCJJ","ct":"","st":"IA","co":"US","f":1630,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Adult Contemporary","sl":"The Mighty 1630 KCJJ","ow":"River City Radio, Inc.","la":41.6009,"lo":-91.5013},{"c":"KFBU","ct":"","st":"WY","co":"US","f":1630,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"YOUR NETWORK OF PRAISE","ow":"Hi-Line Radio Fellowship, Inc.","la":41.1228,"lo":-104.8025},{"c":"KKGM","ct":"","st":"TX","co":"US","f":1630,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News","sl":"BIN","ow":"iHM Licenses, LLC","la":32.8101,"lo":-97.1237},{"c":"XESCAH","ct":"","st":"","co":"MX","f":1630,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":19.7936,"lo":-101.1772},{"c":"KBJA","ct":"","st":"UT","co":"US","f":1640,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"''K-Talk''","ow":"UNITED BROADCASTING COMPANY, INC","la":40.713,"lo":-111.9322},{"c":"KDIA","ct":"","st":"CA","co":"US","f":1640,"dp":"10 kW","np":"10 kW","dd":"N","nd":"Y","fm":"Talk","sl":"''1640 KDIA''","ow":"New Inspiration Broadcasting Company, Inc.","la":37.8955,"lo":-122.3252},{"c":"KPAM","ct":"","st":"OR","co":"US","f":1640,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"","sl":"","ow":"SALEM MEDIA OF OREGON, INC.","la":45.4773,"lo":-122.7515},{"c":"KZLS","ct":"","st":"OK","co":"US","f":1640,"dp":"10 kW","np":"1 kW","dd":"Y","nd":"Y","fm":"Talk","sl":"FREEDOM 96.9","ow":"CHISHOLM TRAIL BROADCASTING CO.","la":36.1153,"lo":-97.7567},{"c":"WSJP","ct":"","st":"WI","co":"US","f":1640,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"RELEVANT RADIO","ow":"RELEVANT RADIO, INC.","la":43.0772,"lo":-88.1923},{"c":"XECSIB","ct":"Zamora","st":"","co":"MX","f":1640,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":null,"lo":null},{"c":"CINA","ct":"Mississauga","st":"","co":"CA","f":1650,"dp":"","np":"","dd":"N","nd":"N","fm":"Talk","sl":"CINA 1650","ow":"1760791 Ontario Inc.","la":43.6256,"lo":-79.6311},{"c":"CKZW","ct":"Montr\u00e9al","st":"","co":"CA","f":1650,"dp":"","np":"","dd":"N","nd":"N","fm":"Ethnic","sl":"Radio Shalom","ow":"Communications M\u00e9dia \u00c9vang\u00e9liqu","la":45.4875,"lo":-73.6686},{"c":"KBJD","ct":"","st":"CO","co":"US","f":1650,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Contemporary Christian","sl":"Radio La RED","ow":"SALEM MEDIA OF COLORADO, INC.","la":39.7989,"lo":-104.9711},{"c":"KCNZ","ct":"","st":"IA","co":"US","f":1650,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"THE FAN 1650 -102.3","ow":"COLOFF MEDIA, LLC","la":42.4131,"lo":-92.4377},{"c":"KFOX","ct":"","st":"CA","co":"US","f":1650,"dp":"10 kW","np":"930 W","dd":"N","nd":"N","fm":"Ethnic","sl":"Radio Seoul","ow":"HK Media, Inc.","la":33.8917,"lo":-118.1851},{"c":"KFSW","ct":"","st":"AR","co":"US","f":1650,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Gospel Music","sl":"THE CROSS 98.7","ow":"M&M Media, LLC","la":35.2748,"lo":-94.4599},{"c":"KSVE","ct":"","st":"TX","co":"US","f":1650,"dp":"8.5 kW","np":"850 W","dd":"N","nd":"N","fm":"Sports","sl":"TUDN Radio El Paso","ow":"ENTRAVISION HOLDINGS, LLC","la":31.7537,"lo":-106.4166},{"c":"WJFV","ct":"","st":"VA","co":"US","f":1650,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"","ow":"Disruptor Radio LLC","la":36.8029,"lo":-76.2824},{"c":"XECPCM","ct":"M\u00e9xico","st":"","co":"MX","f":1650,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":null,"lo":null},{"c":"KBRE","ct":"","st":"CA","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Classic Rock","sl":"105.7 THE BEAR","ow":"SMG-MERCED, LLC","la":37.278,"lo":-120.6274},{"c":"KQWB","ct":"","st":"ND","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"BISON 1660","ow":"RADIO FARGO-MOORHEAD, INC.","la":46.9758,"lo":-96.5842},{"c":"KRZI","ct":"","st":"TX","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"ESPN CENTRAL TEXAS BAYLOR","ow":"M&M Broadcasters, Ltd., Debtor-in-Possession","la":31.4129,"lo":-97.2108},{"c":"KWOD","ct":"","st":"KS","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"The Bet KC","ow":"Audacy License, LLC","la":39.0381,"lo":-94.6158},{"c":"WCNZ","ct":"","st":"FL","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious Teaching","sl":"RELEVANT RADIO","ow":"RELEVANT RADIO, INC.","la":25.992,"lo":-81.6248},{"c":"WGIT","ct":"","st":"PR","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Spanish Religious","sl":"''Lighthouse 360''","ow":"INTERNATIONAL BROADCASTING CORPORATION","la":18.3839,"lo":-65.9207},{"c":"WWRU","ct":"","st":"NJ","co":"US","f":1660,"dp":"10 kW","np":"10 kW","dd":"Y","nd":"Y","fm":"Talk","sl":"AM 1660 K-Radio","ow":"MULTICULTURAL RADIO BROADCASTING LICENSEE, LLC","la":40.8204,"lo":-74.0674},{"c":"WZOX","ct":"","st":"MI","co":"US","f":1660,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Country","sl":"WIN 98-5","ow":"MIDWEST COMMUNICATIONS, INC.","la":42.2362,"lo":-85.5775},{"c":"CJEU","ct":"Gatineau","st":"","co":"CA","f":1670,"dp":"","np":"","dd":"N","nd":"N","fm":"","sl":"","ow":"Radio Communautaire Enfant-ado","la":45.5067,"lo":-75.6911},{"c":"KHPY","ct":"","st":"CA","co":"US","f":1670,"dp":"10 kW","np":"9 kW","dd":"Y","nd":"Y","fm":"Talk","sl":"","ow":"El Sembrador Ministries","la":34.0117,"lo":-117.185},{"c":"KQMS","ct":"","st":"CA","co":"US","f":1670,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News/Talk","sl":"NEWS TALK 1670 AM, 105.7 FM & 104.9 FM","ow":"SMG-REDDING, LLC","la":40.5585,"lo":-122.3311},{"c":"WMGE","ct":"","st":"GA","co":"US","f":1670,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"News","sl":"Macon's BIN 1670","ow":"IHM LICENSES, LLC","la":32.8046,"lo":-83.6043},{"c":"WOZN","ct":"","st":"WI","co":"US","f":1670,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Sports","sl":"THE ZONE","ow":"MID-WEST MANAGEMENT, INC.","la":43.0253,"lo":-89.3962},{"c":"XEANAH","ct":"Huixquilucan","st":"","co":"MX","f":1670,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"Radio An\u00e1huac, Eleva Tus Sentidos, Elevando Sentidos","ow":"","la":null,"lo":null},{"c":"XEFCR","ct":"Reynosa","st":"","co":"MX","f":1670,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"Focus Radio, Heraldo Radio","ow":"","la":null,"lo":null},{"c":"KGED","ct":"","st":"CA","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Regional Mexican","sl":"","ow":"BENDITA EUCARISTIA RADIO INC.","la":36.7705,"lo":-119.9232},{"c":"KNTS","ct":"","st":"WA","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Ethnic","sl":"Radio Punjab","ow":"Baaz Broadcasting Corp.","la":47.6554,"lo":-122.5193},{"c":"KRJO","ct":"","st":"LA","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Country","sl":"99.7 THE LEGEND","ow":"HOLLADAY BROADCASTING OF LOUISIANA, LLC","la":32.4568,"lo":-92.0185},{"c":"WOKB","ct":"","st":"FL","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Gospel Music","sl":"INSPIRATION 1680","ow":"UNITY BROADCASTING LLC","la":28.5692,"lo":-81.5187},{"c":"WPRR","ct":"","st":"MI","co":"US","f":1680,"dp":"10 kW","np":"680 W","dd":"N","nd":"N","fm":"Urban Ac","sl":"102.5 THE RIDE","ow":"Ghettothropic, LLC","la":42.9359,"lo":-85.4573},{"c":"WTTM","ct":"","st":"NJ","co":"US","f":1680,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"(The Unique)","ow":"MULTICULTURAL RADIO BROADCASTING LICENSEE, LLC","la":39.8879,"lo":-75.001},{"c":"XECSIC","ct":"Morelia","st":"","co":"MX","f":1680,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"","ow":"","la":null,"lo":null},{"c":"CHTO","ct":"Toronto","st":"","co":"CA","f":1690,"dp":"","np":"","dd":"N","nd":"N","fm":"","sl":"CHTO AM 1690","ow":"Canadian Hellenic Toronto Radio","la":43.7128,"lo":-79.3156},{"c":"CJLO","ct":"Montr\u00e9al","st":"","co":"CA","f":1690,"dp":"","np":"","dd":"N","nd":"N","fm":"","sl":"","ow":"Concordia Student Broadcasting","la":45.4478,"lo":-73.6578},{"c":"KDMT","ct":"","st":"CO","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"","sl":"","ow":"RELEVANT RADIO, INC.","la":39.6558,"lo":-105.0747},{"c":"KFSG","ct":"","st":"CA","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Religious","sl":"","ow":"WAY BROADCASTING LICENSEE, LLC","la":38.7477,"lo":-121.4936},{"c":"WIGT","ct":"","st":"VI","co":"US","f":1690,"dp":"920 W","np":"920 W","dd":"N","nd":"N","fm":"","sl":"","ow":"El Logos Inc.","la":18.3158,"lo":-64.8839},{"c":"WMLB","ct":"","st":"GA","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"''Freedom 1690''","ow":"Disruptor Radio, LLC","la":33.8096,"lo":-84.3538},{"c":"WPTX","ct":"","st":"MD","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Oldies","sl":"100.7 FM and 1690 AM WPTX","ow":"SOMAR COMMUNICATIONS, INC.","la":38.2829,"lo":-76.5605},{"c":"WVON","ct":"","st":"IL","co":"US","f":1690,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Talk","sl":"AM 1690 WVON","ow":"IHM LICENSES, LLC","la":41.7373,"lo":-87.7012},{"c":"KTNO","ct":"","st":"TX","co":"US","f":1700,"dp":"10 kW","np":"800 W","dd":"N","nd":"N","fm":"","sl":"","ow":"CLARO COMMUNICATIONS, LTD.","la":32.7787,"lo":-96.7312},{"c":"KVNS","ct":"","st":"TX","co":"US","f":1700,"dp":"8.8 kW","np":"880 W","dd":"N","nd":"N","fm":"Sports","sl":"Fox Sports Radio 1700","ow":"IHM LICENSES, LLC","la":25.9495,"lo":-97.5544},{"c":"WEUP","ct":"","st":"AL","co":"US","f":1700,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Urban Contemporary","sl":"103.1 MOST HIP HOP AND R&B","ow":"HUNDLEY BATTS, SR. & VIRGINIA CAPLES","la":34.759,"lo":-86.6431},{"c":"WJCC","ct":"","st":"FL","co":"US","f":1700,"dp":"10 kW","np":"1 kW","dd":"N","nd":"N","fm":"Ethnic","sl":"Radio Mega 1700 AM","ow":"MULTICULTURAL RADIO BROADCASTING LICENSEE, LLC","la":25.9009,"lo":-80.3637},{"c":"WRCR","ct":"","st":"NY","co":"US","f":1700,"dp":"500 W","np":"83 W","dd":"Y","nd":"Y","fm":"Talk","sl":"Talkradio 77 WABC","ow":"Red Apple Media, Inc.","la":41.0968,"lo":-74.0046},{"c":"XEPE","ct":"Tecate","st":"","co":"MX","f":1700,"dp":"","np":"","dd":"","nd":"","fm":"","sl":"TUDN La Deportiva 1700 AM","ow":"","la":32.5383,"lo":-116.9886}];
+const COLOR = { US:'#8c2a1e', CA:'#1f4e8a', MX:'#2d6a3e' };
+
+const map = L.map('map', {
+  zoomSnap: 0.25, zoomDelta: 0.5,
+  attributionControl: false, scrollWheelZoom: true,
+}).setView([37, -96], 3.75);
+L.control.attribution({position:'bottomright', prefix:false})
+  .addAttribution('© OpenStreetMap · © CARTO · RadioLand').addTo(map);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png?key=cb1_3l5z_1_c2741af3163cc6d13274fde6', {
+  maxZoom: 10, subdomains: 'abcd',
+}).addTo(map);
+
+function tipHTML(s){
+  const dir = (code) => code === 'Y' ? ' <span style="color:#f5a742">(DA)</span>' : '';
+  let powLine = '';
+  if (s.dp && s.np && s.dp === s.np) powLine = `${s.dp} day/night${dir(s.dd)}`;
+  else if (s.dp || s.np) powLine = `${s.dp || '—'}${dir(s.dd)} day · ${s.np || '—'}${dir(s.nd)} night`;
+  const fmLine = s.fm ? `<span class="fm">${s.fm}${s.sl ? ' — "' + s.sl + '"' : ''}</span>` : '';
+  const loc = [s.ct, s.st].filter(Boolean).join(', ');
+  return `<div>`
+       + `<b>${s.c}</b> <span class="freq">${s.f}</span><br>`
+       + `${loc}`
+       + (powLine ? `<span class="pw">${powLine}</span>` : '')
+       + (fmLine ? `<br>${fmLine}` : '')
+       + (s.ow ? `<span class="ow">${s.ow}</span>` : '')
+       + `</div>`;
+}
+
+const markers = STATIONS.map(s => {
+  const col = COLOR[s.co] || '#555';
+  const m = L.circleMarker([s.la, s.lo], {
+    radius: 6, color:'#fff', weight: 1.3,
+    fillColor: col, fillOpacity: 0.92,
+  }).bindTooltip(tipHTML(s), {className:'sta', direction:'top', offset:[0,-5]});
+  m.on('mouseover', () => m.setStyle({radius: 9, weight: 2}));
+  m.on('mouseout',  () => m.setStyle({radius: 6, weight: 1.3}));
+  m._sta = s;
+  return m;
+});
+const layer = L.layerGroup(markers).addTo(map);
+
+// ---- Roster table (includes stations without coords) ----
+const tbody = document.getElementById('rosterBody');
+let sortKey = 'f', sortDir = 1;
+
+function renderRoster(filterText){
+  const q = (filterText || '').toLowerCase().trim();
+  const rows = ALL_STATIONS.filter(s => {
+    if (!q) return true;
+    return ['c','ct','st','co','ow','fm','sl'].some(k => (s[k]||'').toLowerCase().includes(q))
+        || String(s.f || '').includes(q);
+  });
+  rows.sort((a,b) => {
+    let av = a[sortKey], bv = b[sortKey];
+    if (sortKey === 'f') { av = +av||0; bv = +bv||0; }
+    else if (sortKey === 'dp' || sortKey === 'np') {
+      const parse = v => { if(!v) return 0; const n = parseFloat(v); return v.includes('kW') ? n : n/1000; };
+      av = parse(av); bv = parse(bv);
+    } else {
+      av = (av||'').toString().toLowerCase();
+      bv = (bv||'').toString().toLowerCase();
+    }
+    if (av < bv) return -1 * sortDir;
+    if (av > bv) return  1 * sortDir;
+    return 0;
+  });
+  let html = '';
+  for (const s of rows){
+    const dirTag = (c) => c === 'Y' ? '<span class="dir DA">DA</span>' : '<span class="dir ND">ND</span>';
+    const dayCell   = s.dp ? `${s.dp}${dirTag(s.dd)}` : '';
+    const nightCell = s.np ? `${s.np}${dirTag(s.nd)}` : '';
+    html += `<tr class="${s.co}">`
+      + `<td class="call">${s.c || ''}</td>`
+      + `<td class="num">${s.f ?? ''}</td>`
+      + `<td>${s.ct || ''}</td>`
+      + `<td>${s.st || ''}</td>`
+      + `<td>${s.co || ''}</td>`
+      + `<td class="num">${dayCell}</td>`
+      + `<td class="num">${nightCell}</td>`
+      + `<td class="muted">${s.fm || ''}</td>`
+      + `<td class="muted">${s.sl || ''}</td>`
+      + `<td class="muted">${s.ow || ''}</td>`
+      + '</tr>';
+  }
+  tbody.innerHTML = html;
+  document.getElementById('count').textContent =
+    rows.length === ALL_STATIONS.length ? '' : `${rows.length} of ${ALL_STATIONS.length} shown`;
+  document.querySelectorAll('table.sta th').forEach(th => {
+    th.classList.remove('sorted-asc','sorted-desc');
+    if (th.dataset.k === sortKey) th.classList.add(sortDir === 1 ? 'sorted-asc' : 'sorted-desc');
+  });
+}
+
+document.querySelectorAll('table.sta th').forEach(th => {
+  th.addEventListener('click', () => {
+    const k = th.dataset.k;
+    if (sortKey === k) sortDir = -sortDir;
+    else { sortKey = k; sortDir = 1; }
+    renderRoster(document.getElementById('q').value);
+  });
+});
+document.getElementById('q').addEventListener('input', (e) => renderRoster(e.target.value));
+renderRoster('');
+</script>
+</body>
+</html>
